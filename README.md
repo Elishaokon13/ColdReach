@@ -1,5 +1,5 @@
 # buildspace 
 ### Welcome 👋
-This is the starter template for the [build your own AI writing assistant w/ GPT-3](https://buildspace.so/builds/ai-writer) project.
 
+Hi there, Here's a blog post AI tool i created with OPENAI and yeah, you can check em out.
 🥂
