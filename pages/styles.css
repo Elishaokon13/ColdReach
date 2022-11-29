@@ -234,7 +234,7 @@ textarea {
     font-weight: 700;
     letter-spacing: -0.5px;
     line-height: 1em;
-    color: #fff;
+    color: rgba(61, 4, 126, 0.75);
     padding: 12px;
     text-decoration: none;
 }
@@ -249,8 +249,8 @@ textarea {
     height: 17px;
     image-rendering: pixelated;
     flex-shrink: 0;
-    fill: black;
-    color: black;
+    fill: rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
     transform: none;
     transform-origin: 50% 50% 0px;
     padding-right: 5px;

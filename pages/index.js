@@ -38,12 +38,11 @@ const Home = () => {
       <div className="container">
         <div className="header">
           <div className="header-title">
-            <h1>magic blog post generator</h1>
+            <h1>AI Blog Post Generator</h1>
           </div>
           <div className="header-subtitle">
             <h2>
-              input the title to your blog post below, we'll generate the
-              rest.
+              Hey! you're here finally. Let's get started! Input your Blog Post Title. Elisha's AI writer will do the rest.
             </h2>
           </div>
         </div>
@@ -83,13 +82,13 @@ const Home = () => {
       </div>
       <div className="badge-container grow">
         <a
-          href="https://buildspace.so/builds/ai-writer"
+          href="https://www.elishaokon.com.ng"
           target="_blank"
           rel="noreferrer"
         >
           <div className="badge">
             <Image src={buildspaceLogo} alt="buildspace logo" />
-            <p>build with buildspace</p>
+            <p>Built by Elisha David</p>
           </div>
         </a>
       </div>
