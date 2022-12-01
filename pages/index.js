@@ -4,12 +4,6 @@ import buildspaceLogo from '../assets/buildspace-logo.png';
 import { useState } from 'react';
 
 const Home = () => {
-  const [setCopyText] = useState('');
-
-  // const handleCopyText = (e) => {
-  //   setCopyText(e.target.value);
-  // }
-
   const copyToClipboard = () => {
     copy(apiOutput);
     alert(`You have copied "${apiOutput}"`);
