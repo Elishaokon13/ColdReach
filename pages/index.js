@@ -1,8 +1,19 @@
 import Image from 'next/image';
+import copy from "copy-to-clipboard";
 import buildspaceLogo from '../assets/buildspace-logo.png';
 import { useState } from 'react';
 
 const Home = () => {
+  const [setCopyText] = useState('');
+
+  // const handleCopyText = (e) => {
+  //   setCopyText(e.target.value);
+  // }
+
+  const copyToClipboard = () => {
+    copy(apiOutput);
+    alert(`You have copied "${apiOutput}"`);
+  }
 
   const [userInput, setUserInput] = useState('');
 
@@ -11,7 +22,7 @@ const Home = () => {
 
   const callGenerateEndpoint = async () => {
     setIsGenerating(true);
-    
+
     console.log("Calling OpenAI...")
     const response = await fetch('/api/generate', {
       method: 'POST',
@@ -61,23 +72,24 @@ const Home = () => {
               onClick={callGenerateEndpoint}
             >
               <div className="generate">
-              {isGenerating ? <span class="loader"></span> : <p>Generate</p>}
+                {isGenerating ? <span class="loader"></span> : <p>Generate</p>}
               </div>
             </a>
           </div>
           {apiOutput && (
-          <div className="output">
-            <div className="output-header-container">
-              <div className="output-header">
-                <h3>Output</h3>
+            <div className="output">
+              <div className="output-header-container">
+                <div className="output-header">
+                  <h3>Output</h3>
+                </div>
               </div>
+              {/* New code I added here */}
+              <div className="output-content">
+                <p>{apiOutput}</p>
+              </div>
+              <button onClick={copyToClipboard} className="generate-button">Copy</button>
             </div>
-            {/* New code I added here */}
-            <div className="output-content">
-              <p>{apiOutput}</p>
-            </div>
-          </div>
-        )}
+          )}
         </div>
       </div>
       <div className="badge-container grow">

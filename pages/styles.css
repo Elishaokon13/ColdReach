@@ -173,6 +173,8 @@ textarea {
     place-content: flex-start;
     align-items: flex-start;
     background-color: rgba(61, 4, 126, 0.75);
+    color:#FFF;
+    border-color: #FFF;
     border-radius: 100px;
     display: flex;
     flex: 0 0 auto;
