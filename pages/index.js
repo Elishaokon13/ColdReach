@@ -1,104 +1,200 @@
-import Image from 'next/image';
+import Image from "next/image";
 import copy from "copy-to-clipboard";
-import buildspaceLogo from '../assets/buildspace-logo.png';
-import { useState } from 'react';
+import buildspaceLogo from "../assets/buildspace-logo.png";
+import { useState } from "react";
+import Layouts from "../src/components/layouts";
+import { BiLoader } from "react-icons/bi";
+import {
+  Button,
+  Heading,
+  SimpleGrid,
+  Text,
+  Textarea,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 
 const Home = () => {
   const copyToClipboard = () => {
     copy(apiOutput);
     alert(`You have copied "${apiOutput}"`);
-  }
+  };
 
-  const [userInput, setUserInput] = useState('');
+  const [userInput, setUserInput] = useState("");
+  const [apiOutput, setApiOutput] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [textAreaValue, setTextAreaValue] = useState("");
 
-  const [apiOutput, setApiOutput] = useState('')
-  const [isGenerating, setIsGenerating] = useState(false)
+  const toast = useToast();
+
+  const handleVStackClick = () => {
+    setTextAreaValue(
+      "Write a blog post to explain the importance of investment."
+    );
+  };
 
   const callGenerateEndpoint = async () => {
-    setIsGenerating(true);
+    try {
+      setIsGenerating(true);
 
-    console.log("Calling OpenAI...")
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userInput }),
-    });
+      console.log("Calling OpenAI...");
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userInput }),
+      });
 
-    const data = await response.json();
-    const { output } = data;
-    console.log("OpenAI replied...", output.text)
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
 
-    setApiOutput(`${output.text}`);
-    setIsGenerating(false);
-  }
+      const data = await response.json();
+      console.log("OpenAI replied...", data);
+
+      const { output } = data;
+      console.log("OpenAI output:", output);
+
+      setApiOutput(output);
+    } catch (error) {
+      console.error("Error in callGenerateEndpoint:", error);
+      toast({
+        title: "Error",
+        description: "Failed to generate text",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      // Handle the error accordingly, e.g., show a message to the user
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const onUserChangedText = (event) => {
     setUserInput(event.target.value);
   };
 
   return (
-    <div className="root">
-      <div className="container">
-        <div className="header">
-          <div className="header-title">
-            <h1>AI Blog Post Generator</h1>
-          </div>
-          <div className="header-subtitle">
-            <h2>
-              Hey! you're here finally. Let's get started! Input your Blog Post Title. Elisha's AI writer will do the rest.
-            </h2>
-          </div>
-        </div>
-        <div className="prompt-container">
-          <textarea
-            placeholder="Input your blog Title"
-            className="prompt-box"
-            value={userInput}
-            onChange={onUserChangedText}
-          />
-          <div className="prompt-buttons">
-            <a
-              className={
-                isGenerating ? 'generate-button loading' : 'generate-button'
-              }
-              onClick={callGenerateEndpoint}
+    <>
+      <Layouts>
+        <VStack align="center" justify="center" w="full" minH="70vh">
+          <VStack maxW="760px" align="left" w="full">
+            <VStack align="left">
+              <Heading fontWeight={600}>Hi there, John</Heading>
+              <Text fontSize={16} maxW="360px" color="blackAlpha.600">
+                You're finally here, use one of our common prompts below or use
+                your own to begin{" "}
+              </Text>
+            </VStack>
+            <SimpleGrid
+              columns={[2, 2, 4, 4]}
+              spacing="12px"
+              w="fit-content"
+              mt={8}
             >
-              <div className="generate">
-                {isGenerating ? <span class="loader"></span> : <p>Generate</p>}
-              </div>
-            </a>
-          </div>
-          {apiOutput && (
-            <div className="output">
-              <div className="output-header-container">
-                <div className="output-header">
-                  <h3>Output</h3>
-                </div>
-              </div>
-              {/* New code I added here */}
-              <div className="output-content">
-                <p>{apiOutput}</p>
-              </div>
-              <button onClick={copyToClipboard} className="generate-button">Copy</button>
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="badge-container grow">
-        <a
-          href="https://www.elishaokon.com.ng"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <div className="badge">
-            <Image src={buildspaceLogo} alt="buildspace logo" />
-            <p>Built by Elisha David</p>
-          </div>
-        </a>
-      </div>
-    </div>
+              <VStack
+                align="left"
+                p="16px"
+                justify="space-between"
+                h="160px"
+                maxW="200px"
+                borderWidth={1}
+                borderColor="blackAlpha.200"
+                rounded="8px"
+                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
+                onClick={handleVStackClick}
+              >
+                <Text fontSize={12} fontWeight={400}>
+                  Write a blog post to explain the importance of investment.
+                </Text>
+                <BiLoader />
+              </VStack>
+              <VStack
+                align="left"
+                p="16px"
+                justify="space-between"
+                h="160px"
+                maxW="200px"
+                borderWidth={1}
+                borderColor="blackAlpha.200"
+                rounded="8px"
+                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
+                onClick={handleVStackClick}
+              >
+                <Text fontSize={12} fontWeight={400}>
+                  Write a blog post to explain the importance of investment.
+                </Text>
+                <BiLoader />
+              </VStack>
+              <VStack
+                align="left"
+                p="16px"
+                justify="space-between"
+                h="160px"
+                maxW="200px"
+                borderWidth={1}
+                borderColor="blackAlpha.200"
+                rounded="8px"
+                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
+                onClick={handleVStackClick}
+              >
+                <Text fontSize={12} fontWeight={400}>
+                  Write a blog post to explain the importance of investment.
+                </Text>
+                <BiLoader />
+              </VStack>
+              <VStack
+                align="left"
+                p="16px"
+                justify="space-between"
+                h="160px"
+                maxW="200px"
+                borderWidth={1}
+                borderColor="blackAlpha.200"
+                rounded="8px"
+                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
+                onClick={handleVStackClick}
+              >
+                <Text fontSize={12} fontWeight={400}>
+                  Write a blog post to explain the importance of investment.
+                </Text>
+                <BiLoader />
+              </VStack>
+            </SimpleGrid>
+            <VStack align="left" w="full">
+              {apiOutput && (
+                <VStack align="left">
+                  <Text fontWeight={700}>Output:</Text>
+                  <Text>{apiOutput}</Text>
+                </VStack>
+              )}
+              <Textarea
+                placeholder="Write your own prompt"
+                borderColor="blackAlpha.200"
+                rows={3}
+                value={userInput || textAreaValue}
+                onChange={onUserChangedText}
+              />
+              <Button
+                rounded="lg"
+                size="md"
+                color="white"
+                bg="purple"
+                w="fit-content"
+                alignSelf="flex-end"
+                _hover={{ bg: "purple.700" }}
+                isLoading={isGenerating}
+                onClick={callGenerateEndpoint}
+              >
+                Generate
+              </Button>
+            </VStack>
+          </VStack>
+        </VStack>
+      </Layouts>
+    </>
   );
 };
 
