@@ -14,7 +14,7 @@ export default function Navbar() {
       rounded="lg"
     >
       <Flex align="center" justify="space-between" w="100%">
-       {/* <w3m-button /> */}
+        <w3m-button  />
         <Button
           align="center"
           gap="12px"

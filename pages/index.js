@@ -5,6 +5,7 @@ import { useState } from "react";
 import Layouts from "../src/components/layouts";
 import { BiLoader } from "react-icons/bi";
 import {
+  Box,
   Button,
   Heading,
   SimpleGrid,
@@ -13,6 +14,8 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import { truncateText } from "../src/lib/utils";
 
 const Home = () => {
   const copyToClipboard = () => {
@@ -25,6 +28,7 @@ const Home = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
 
+  const { address, chainId, isConnected } = useWeb3ModalAccount();
   const toast = useToast();
 
   const handleVStackClick = () => {
@@ -89,7 +93,9 @@ const Home = () => {
           gap="4"
         >
           <VStack align="left">
-            <Heading fontWeight={600}>Hi there, John</Heading>
+            <Heading fontWeight={600}>
+              Hi there, <Box as="span"> {truncateText(address, 6)}</Box>
+            </Heading>
             <Text fontSize={16} maxW="360px" color="blackAlpha.600">
               You're finally here, use one of our common prompts below or use
               your own to begin{" "}
