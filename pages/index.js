@@ -79,118 +79,119 @@ const Home = () => {
   return (
     <>
       <Layouts>
-        <VStack align="center" justify="center" w="full" minH="70vh">
-          <VStack maxW="760px" align="left" w="full">
-            <VStack align="left">
-              <Heading fontWeight={600}>Hi there, John</Heading>
-              <Text fontSize={16} maxW="360px" color="blackAlpha.600">
-                You're finally here, use one of our common prompts below or use
-                your own to begin{" "}
-              </Text>
-            </VStack>
-            <SimpleGrid
-              columns={[2, 2, 4, 4]}
-              spacing="12px"
-              w="fit-content"
-              mt={8}
+        <VStack
+          maxW="760px"
+          align="left"
+          justify="center"
+          w="full"
+          minH="70vh"
+          mx="auto"
+          gap="4"
+        >
+          <VStack align="left">
+            <Heading fontWeight={600}>Hi there, John</Heading>
+            <Text fontSize={16} maxW="360px" color="blackAlpha.600">
+              You're finally here, use one of our common prompts below or use
+              your own to begin{" "}
+            </Text>
+          </VStack>
+          <SimpleGrid columns={[2, 2, 4, 4]} spacing="12px" w="fit-content">
+            <VStack
+              align="left"
+              p="16px"
+              justify="space-between"
+              h="160px"
+              maxW="200px"
+              borderWidth={1}
+              borderColor="blackAlpha.200"
+              rounded="8px"
+              _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
+              onClick={handleVStackClick}
             >
-              <VStack
-                align="left"
-                p="16px"
-                justify="space-between"
-                h="160px"
-                maxW="200px"
-                borderWidth={1}
-                borderColor="blackAlpha.200"
-                rounded="8px"
-                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
-                onClick={handleVStackClick}
-              >
-                <Text fontSize={12} fontWeight={400}>
-                  Write a blog post to explain the importance of investment.
-                </Text>
-                <BiLoader />
-              </VStack>
-              <VStack
-                align="left"
-                p="16px"
-                justify="space-between"
-                h="160px"
-                maxW="200px"
-                borderWidth={1}
-                borderColor="blackAlpha.200"
-                rounded="8px"
-                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
-                onClick={handleVStackClick}
-              >
-                <Text fontSize={12} fontWeight={400}>
-                  Write a blog post to explain the importance of investment.
-                </Text>
-                <BiLoader />
-              </VStack>
-              <VStack
-                align="left"
-                p="16px"
-                justify="space-between"
-                h="160px"
-                maxW="200px"
-                borderWidth={1}
-                borderColor="blackAlpha.200"
-                rounded="8px"
-                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
-                onClick={handleVStackClick}
-              >
-                <Text fontSize={12} fontWeight={400}>
-                  Write a blog post to explain the importance of investment.
-                </Text>
-                <BiLoader />
-              </VStack>
-              <VStack
-                align="left"
-                p="16px"
-                justify="space-between"
-                h="160px"
-                maxW="200px"
-                borderWidth={1}
-                borderColor="blackAlpha.200"
-                rounded="8px"
-                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
-                onClick={handleVStackClick}
-              >
-                <Text fontSize={12} fontWeight={400}>
-                  Write a blog post to explain the importance of investment.
-                </Text>
-                <BiLoader />
-              </VStack>
-            </SimpleGrid>
-            <VStack align="left" w="full">
-              {apiOutput && (
-                <VStack align="left">
-                  <Text fontWeight={700}>Output:</Text>
-                  <Text>{apiOutput}</Text>
-                </VStack>
-              )}
-              <Textarea
-                placeholder="Write your own prompt"
-                borderColor="blackAlpha.200"
-                rows={3}
-                value={userInput || textAreaValue}
-                onChange={onUserChangedText}
-              />
-              <Button
-                rounded="lg"
-                size="md"
-                color="white"
-                bg="purple"
-                w="fit-content"
-                alignSelf="flex-end"
-                _hover={{ bg: "purple.700" }}
-                isLoading={isGenerating}
-                onClick={callGenerateEndpoint}
-              >
-                Generate
-              </Button>
+              <Text fontSize={12} fontWeight={400}>
+                Write a blog post to explain the importance of investment.
+              </Text>
+              <BiLoader />
             </VStack>
+            <VStack
+              align="left"
+              p="16px"
+              justify="space-between"
+              h="160px"
+              maxW="200px"
+              borderWidth={1}
+              borderColor="blackAlpha.200"
+              rounded="8px"
+              _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
+              onClick={handleVStackClick}
+            >
+              <Text fontSize={12} fontWeight={400}>
+                Write a blog post to explain the importance of investment.
+              </Text>
+              <BiLoader />
+            </VStack>
+            <VStack
+              align="left"
+              p="16px"
+              justify="space-between"
+              h="160px"
+              maxW="200px"
+              borderWidth={1}
+              borderColor="blackAlpha.200"
+              rounded="8px"
+              _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
+              onClick={handleVStackClick}
+            >
+              <Text fontSize={12} fontWeight={400}>
+                Write a blog post to explain the importance of investment.
+              </Text>
+              <BiLoader />
+            </VStack>
+            <VStack
+              align="left"
+              p="16px"
+              justify="space-between"
+              h="160px"
+              maxW="200px"
+              borderWidth={1}
+              borderColor="blackAlpha.200"
+              rounded="8px"
+              _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
+              onClick={handleVStackClick}
+            >
+              <Text fontSize={12} fontWeight={400}>
+                Write a blog post to explain the importance of investment.
+              </Text>
+              <BiLoader />
+            </VStack>
+          </SimpleGrid>
+          <VStack align="left" w="full">
+            {apiOutput && (
+              <VStack align="left">
+                <Text fontWeight={700}>Output:</Text>
+                <Text>{apiOutput}</Text>
+              </VStack>
+            )}
+            <Textarea
+              placeholder="Write your own prompt"
+              borderColor="blackAlpha.200"
+              rows={3}
+              value={userInput || textAreaValue}
+              onChange={onUserChangedText}
+            />
+            <Button
+              rounded="lg"
+              size="md"
+              color="white"
+              bgGradient="linear(to-br, blue.500, blue.800)"
+              w="fit-content"
+              alignSelf="flex-end"
+              _hover={{ bg: "blue.800" }}
+              isLoading={isGenerating}
+              onClick={callGenerateEndpoint}
+            >
+              Generate
+            </Button>
           </VStack>
         </VStack>
       </Layouts>
