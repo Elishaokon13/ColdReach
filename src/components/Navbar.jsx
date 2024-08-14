@@ -20,6 +20,7 @@ export default function Navbar() {
           gap="12px"
           rounded="full"
           variant="outline"
+          color='blackAlpha.800'
           borderColor="blackAlpha.200"
           _hover={{ bg: "blackAlpha.50" }}
           fontSize={12}

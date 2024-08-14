@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Heading,
+  Input,
   SimpleGrid,
   Text,
   Textarea,
@@ -23,7 +24,8 @@ const Home = () => {
     alert(`You have copied "${apiOutput}"`);
   };
 
-  const [userInput, setUserInput] = useState("");
+  const [reasonInput, setReasonInput] = useState("Write a prompt here...");
+  const [personInput, setPersonInput] = useState("Elon Musk, CEO of SpaceX...");
   const [apiOutput, setApiOutput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
@@ -35,6 +37,7 @@ const Home = () => {
     setTextAreaValue(
       "Write a blog post to explain the importance of investment."
     );
+    // setTextAreaValue === reasonInput;
   };
 
   const callGenerateEndpoint = async () => {
@@ -47,25 +50,20 @@ const Home = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userInput }),
+        body: JSON.stringify({ personInput, reasonInput }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
-      }
-
       const data = await response.json();
-      console.log("OpenAI replied...", data);
-
       const { output } = data;
-      console.log("OpenAI output:", output);
+      console.log("OpenAI replied...", output);
 
-      setApiOutput(output);
+      setApiOutput(`${output.text}`);
+      setIsGenerating(true);
     } catch (error) {
       console.error("Error in callGenerateEndpoint:", error);
       toast({
         title: "Error",
-        description: "Failed to generate text",
+        description: "Failed to generate response",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -77,7 +75,10 @@ const Home = () => {
   };
 
   const onUserChangedText = (event) => {
-    setUserInput(event.target.value);
+    setReasonInput(event.target.value);
+  };
+  const onUserChangePerson = (event) => {
+    setPersonInput(event.target.value);
   };
 
   return (
@@ -94,7 +95,11 @@ const Home = () => {
         >
           <VStack align="left">
             <Heading fontWeight={600}>
-              Hi there, <Box as="span"> {truncateText(address, 6)}</Box>
+              Hi there,{" "}
+              <Box as="span">
+                {" "}
+                {address ? truncateText(address, 6) : "New User"}
+              </Box>
             </Heading>
             <Text fontSize={16} maxW="360px" color="blackAlpha.600">
               You're finally here, use one of our common prompts below or use
@@ -178,11 +183,17 @@ const Home = () => {
                 <Text>{apiOutput}</Text>
               </VStack>
             )}
+            <Input
+              placeholder="Elon Musk, CEO of SpaceX"
+              borderColor="blackAlpha.200"
+              value={personInput}
+              onChange={onUserChangePerson}
+            />
             <Textarea
               placeholder="Write your own prompt"
               borderColor="blackAlpha.200"
               rows={3}
-              value={userInput || textAreaValue}
+              value={reasonInput}
               onChange={onUserChangedText}
             />
             <Button
