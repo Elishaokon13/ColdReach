@@ -19,13 +19,10 @@ import {
 } from "@chakra-ui/react";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import { truncateText } from "../src/lib/utils";
+import { IoCopyOutline } from "react-icons/io5";
+import { PiShareFatLight } from "react-icons/pi";
 
 const Home = () => {
-  const copyToClipboard = () => {
-    copy(apiOutput);
-    alert(`You have copied "${apiOutput}"`);
-  };
-
   const [reasonInput, setReasonInput] = useState("");
   const [personInput, setPersonInput] = useState("");
   const [apiOutput, setApiOutput] = useState("");
@@ -42,21 +39,20 @@ const Home = () => {
     // setTextAreaValue === reasonInput;
   };
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const callGenerateEndpoint = async () => {
     try {
       setIsGenerating(true);
 
       // console.log("Calling OpenAI...");
-      const response = await fetch(
-        "https://gpt-writer-api.vercel.app/api/prompt",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ personInput, reasonInput }),
-        }
-      );
+      const response = await fetch(`${API_URL}/prompt`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ personInput, reasonInput }),
+      });
 
       const res = await response.json();
       const { data } = res;
@@ -89,6 +85,17 @@ const Home = () => {
     setPersonInput(event.target.value);
   };
 
+  const copyToClipboard = () => {
+    copy(apiOutput);
+    toast({
+      title: "Success",
+      description: "Copied to clipboard",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+
   return (
     <>
       <Layouts>
@@ -106,7 +113,11 @@ const Home = () => {
           <VStack align="left">
             <Heading fontWeight={600}>
               Hi there,{" "}
-              <Box as="span">
+              <Box
+                as="span"
+                bgGradient="linear(to-br, pink.500, blackAlpha.800)"
+                bgClip="text"
+              >
                 {" "}
                 {address ? truncateText(address, 6) : "New User"}
               </Box>
@@ -192,16 +203,26 @@ const Home = () => {
             {apiOutput && (
               <>
                 {apiOutput?.map((output, index) => (
-                  <Box
+                  <VStack
                     key={index}
+                    align="left"
                     w="full"
                     bg="blackAlpha.100"
                     p="16px"
                     rounded="lg"
+                    gap="12px"
                   >
                     <Text dangerouslySetInnerHTML={{ __html: output }}></Text>
+                    <Flex align="center" gap="12px">
+                      <Box cursor="pointer" onClick={copyToClipboard}>
+                        <IoCopyOutline />
+                      </Box>
+                      <Box cursor="pointer">
+                        <PiShareFatLight />
+                      </Box>
+                    </Flex>
                     {/* <Text>{output}</Text> */}
-                  </Box>
+                  </VStack>
                 ))}
               </>
             )}
@@ -235,7 +256,7 @@ const Home = () => {
               value={reasonInput}
               onChange={onUserChangedText}
             />
-            {address ? (
+            {isConnected ? (
               <Button
                 rounded="lg"
                 size="md"
