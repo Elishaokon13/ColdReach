@@ -8,7 +8,7 @@ const openai = new OpenAIApi(configuration);
 
 const generateAction = async (req, res) => {
   const baseCompletion = await openai.createCompletion({
-    model: "gpt-4o-mini",
+    model: "gpt-3.5-turbo",
     prompt: `Write a cold message t the erson for the specified reason below. Make sure the message is tailored towards the person's experience & skillset. \nPerson: ${req.body.personInput} \nReason: ${req.body.reasonInput}. `,
     temperature: 0.7,
     max_tokens: 504,

@@ -6,6 +6,7 @@ export default function Navbar() {
   return (
     <VStack
       mx="auto"
+      // my='24px'
       maxW="460px"
       align="flex-start"
       borderWidth="1px"
@@ -14,13 +15,13 @@ export default function Navbar() {
       rounded="lg"
     >
       <Flex align="center" justify="space-between" w="100%">
-        <w3m-button  />
+        <w3m-button />
         <Button
           align="center"
           gap="12px"
           rounded="full"
           variant="outline"
-          color='blackAlpha.800'
+          color="blackAlpha.800"
           borderColor="blackAlpha.200"
           _hover={{ bg: "blackAlpha.50" }}
           fontSize={12}

@@ -24,8 +24,8 @@ const Home = () => {
     alert(`You have copied "${apiOutput}"`);
   };
 
-  const [reasonInput, setReasonInput] = useState("Write a prompt here...");
-  const [personInput, setPersonInput] = useState("Elon Musk, CEO of SpaceX...");
+  const [reasonInput, setReasonInput] = useState("");
+  const [personInput, setPersonInput] = useState("");
   const [apiOutput, setApiOutput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
@@ -45,19 +45,22 @@ const Home = () => {
       setIsGenerating(true);
 
       console.log("Calling OpenAI...");
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ personInput, reasonInput }),
-      });
+      const response = await fetch(
+        "https://gpt-writer-api.vercel.app/api/prompt",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ personInput, reasonInput }),
+        }
+      );
 
-      const data = await response.json();
-      const { output } = data;
-      console.log("OpenAI replied...", output);
+      const res = await response.json();
+      const { data } = res;
+      console.log("OpenAI replied...", data.text);
 
-      setApiOutput(`${output.text}`);
+      setApiOutput(`${data.text}`);
       setIsGenerating(true);
     } catch (error) {
       console.error("Error in callGenerateEndpoint:", error);
@@ -87,9 +90,9 @@ const Home = () => {
         <VStack
           maxW="760px"
           align="left"
-          justify="center"
+          justify="end"
           w="full"
-          minH="70vh"
+          minH="80vh"
           mx="auto"
           gap="4"
         >
@@ -180,19 +183,21 @@ const Home = () => {
             {apiOutput && (
               <VStack align="left">
                 <Text fontWeight={700}>Output:</Text>
-                <Text>{apiOutput}</Text>
+                <Text dangerouslySetInnerHTML={{ __html: apiOutput }}></Text>
               </VStack>
             )}
             <Input
               placeholder="Elon Musk, CEO of SpaceX"
+              _placeholder={{ color: "blackAlpha.400" }}
               borderColor="blackAlpha.200"
               value={personInput}
               onChange={onUserChangePerson}
             />
             <Textarea
-              placeholder="Write your own prompt"
+              placeholder="Write a prompt here..."
+              _placeholder={{ color: "blackAlpha.400" }}
               borderColor="blackAlpha.200"
-              rows={3}
+              rows={5}
               value={reasonInput}
               onChange={onUserChangedText}
             />
