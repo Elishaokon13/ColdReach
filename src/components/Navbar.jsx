@@ -6,16 +6,24 @@ export default function Navbar() {
   return (
     <VStack
       mx="auto"
-      // my='24px'
-      maxW="460px"
+      my='24px'
+      maxW="760px"
       align="flex-start"
       borderWidth="1px"
       borderColor="blackAlpha.200"
-      p="16px"
+      px="16px"
+      py="8px"
       rounded="lg"
+      bg="whiteAlpha.200"
+      backdropFilter='blur(3px)'
+      // position="fixed"
+      // top="10"
+      // left="50%"
+      // transform="translateX(-50%)"
+      // zIndex="1000"
     >
       <Flex align="center" justify="space-between" w="100%">
-        <w3m-button />
+        <w3m-button balance={false} />
         <Button
           align="center"
           gap="12px"
