@@ -1,4 +1,4 @@
-import { Button, Flex, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, useColorMode, VStack } from "@chakra-ui/react";
 import {
   useDisconnect,
   useWeb3Modal,
@@ -7,11 +7,13 @@ import {
 import React from "react";
 import { FaCrown } from "react-icons/fa6";
 import { truncateText } from "../lib/utils";
+import { BsMoonFill, BsSunFill } from "react-icons/bs";
 
 export default function Navbar() {
   const { open } = useWeb3Modal();
   const { disconnect } = useDisconnect();
   const { address, chainId, isConnected } = useWeb3ModalAccount();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   return (
     <VStack
@@ -20,12 +22,12 @@ export default function Navbar() {
       maxW="760px"
       align="flex-start"
       borderWidth="1px"
-      borderColor="blackAlpha.200"
+      borderColor={colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"}
       px="16px"
       py="8px"
-      rounded="lg"
-      bg="whiteAlpha.200"
-      backdropFilter="blur(3px)"
+      rounded="xl"
+      // bg="whiteAlpha.200"
+      // backdropFilter="blur(3px)"
       // position="fixed"
       // top="10"
       // left="50%"
@@ -38,7 +40,7 @@ export default function Navbar() {
           align="center"
           gap="12px"
           rounded="full"
-          variant="outline"
+          variant="solid"
           size="md"
           color="white"
           minW="140px"
@@ -53,19 +55,37 @@ export default function Navbar() {
         >
           {isConnected ? <>{truncateText(address, 10)}</> : "Connect wallet"}
         </Button>
-        <Button
-          align="center"
-          gap="12px"
-          rounded="full"
-          variant="outline"
-          color="blackAlpha.800"
-          borderColor="blackAlpha.200"
-          _hover={{ bg: "blackAlpha.50" }}
-          fontSize={12}
-        >
-          <FaCrown size={18} />
-          Upgrade to Pro{" "}
-        </Button>
+        <Flex align="center" gap="12px">
+          <Button
+            align="center"
+            gap="12px"
+            rounded="full"
+            variant="outline"
+            color={colorMode === "light" ? "blackAlpha.800" : "whiteAlpha.800"}
+            borderColor={
+              colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
+            }
+            _hover={{
+              bg: colorMode === "light" ? "blackAlpha.50" : "whiteAlpha.50",
+            }}
+            fontSize={12}
+          >
+            <FaCrown size={18} />
+            Upgrade to Pro{" "}
+          </Button>
+          <Box
+          cursor='pointer'
+            p="8px"
+            rounded="full"
+            borderWidth="1px"
+            borderColor={
+              colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
+            }
+            onClick={toggleColorMode}
+          >
+            {colorMode === "light" ? <BsMoonFill /> : <BsSunFill />}
+          </Box>
+        </Flex>
       </Flex>
     </VStack>
   );

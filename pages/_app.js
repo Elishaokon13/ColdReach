@@ -1,4 +1,4 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeProvider } from "@chakra-ui/react";
 import "./styles.css";
 import theme from "../src/theme/theme";
 // Supports weights 100-900
@@ -37,9 +37,9 @@ const ethersConfig = defaultConfig({
   enableCoinbase: true, // true by default
   auth: {
     email: true,
-    socials: ['google', 'x', 'github', 'discord', 'farcaster'], // add social logins
+    socials: ["google", "x", "github", "discord", "farcaster"], // add social logins
     showWallets: true,
-    walletFeatures: false
+    walletFeatures: false,
   },
   rpcUrl: "...", // used for the Coinbase SDK
   defaultChainId: 1, // used for the Coinbase SDK
@@ -57,7 +57,7 @@ createWeb3Modal({
 
 function App({ Component, pageProps }) {
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme={theme} cssVarsRoot="body">
       <Component {...pageProps} />
     </ChakraProvider>
   );

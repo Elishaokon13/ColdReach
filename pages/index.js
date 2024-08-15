@@ -14,6 +14,7 @@ import {
   Spinner,
   Text,
   Textarea,
+  useColorMode,
   useToast,
   VStack,
 } from "@chakra-ui/react";
@@ -31,6 +32,7 @@ const Home = () => {
 
   const { address, chainId, isConnected } = useWeb3ModalAccount();
   const toast = useToast();
+  const { colorMode } = useColorMode();
 
   const handleVStackClick = () => {
     setTextAreaValue(
@@ -122,7 +124,13 @@ const Home = () => {
                 {address ? truncateText(address, 6) : "New User"}
               </Box>
             </Heading>
-            <Text fontSize={16} maxW="460px" color="blackAlpha.600">
+            <Text
+              fontSize={16}
+              maxW="460px"
+              color={
+                colorMode === "light" ? "blackAlpha.600" : "whiteAlpha.600"
+              }
+            >
               You're finally here, use one of our common prompts below or use
               your own to begin{" "}
             </Text>
@@ -136,7 +144,9 @@ const Home = () => {
                 h="160px"
                 maxW="200px"
                 borderWidth={1}
-                borderColor="blackAlpha.200"
+                borderColor={
+                  colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
+                }
                 rounded="8px"
                 _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
                 onClick={handleVStackClick}
@@ -153,7 +163,9 @@ const Home = () => {
                 h="160px"
                 maxW="200px"
                 borderWidth={1}
-                borderColor="blackAlpha.200"
+                borderColor={
+                  colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
+                }
                 rounded="8px"
                 _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
                 onClick={handleVStackClick}
@@ -170,7 +182,9 @@ const Home = () => {
                 h="160px"
                 maxW="200px"
                 borderWidth={1}
-                borderColor="blackAlpha.200"
+                borderColor={
+                  colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
+                }
                 rounded="8px"
                 _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
                 onClick={handleVStackClick}
@@ -187,7 +201,9 @@ const Home = () => {
                 h="160px"
                 maxW="200px"
                 borderWidth={1}
-                borderColor="blackAlpha.200"
+                borderColor={
+                  colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
+                }
                 rounded="8px"
                 _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
                 onClick={handleVStackClick}
@@ -243,15 +259,25 @@ const Home = () => {
           >
             <Input
               placeholder="Input person's description"
-              _placeholder={{ color: "blackAlpha.400" }}
-              borderColor="blackAlpha.200"
+              _placeholder={{
+                color:
+                  colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400",
+              }}
+              borderColor={
+                colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
+              }
               value={personInput}
               onChange={onUserChangePerson}
             />
             <Textarea
               placeholder="Write a prompt here..."
-              _placeholder={{ color: "blackAlpha.400" }}
-              borderColor="blackAlpha.200"
+              _placeholder={{
+                color:
+                  colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400",
+              }}
+              borderColor={
+                colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
+              }
               rows={5}
               value={reasonInput}
               onChange={onUserChangedText}
