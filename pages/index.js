@@ -200,6 +200,7 @@ const Home = () => {
                     rounded="lg"
                   >
                     <Text dangerouslySetInnerHTML={{ __html: output }}></Text>
+                    {/* <Text>{output}</Text> */}
                   </Box>
                 ))}
               </>
