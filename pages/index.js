@@ -29,10 +29,9 @@ const Home = () => {
   const [personInput, setPersonInput] = useState("");
   const [apiOutput, setApiOutput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [textAreaValue, setTextAreaValue] = useState("");
 
   const { open } = useWeb3Modal();
-  const { address, chainId, isConnected } = useWeb3ModalAccount();
+  const { address, isConnected } = useWeb3ModalAccount();
   const toast = useToast();
   const { colorMode } = useColorMode();
 
@@ -46,8 +45,6 @@ const Home = () => {
   const callGenerateEndpoint = async () => {
     try {
       setIsGenerating(true);
-
-      // console.log("Calling OpenAI...");
       const response = await fetch(`${API_URL}/prompt`, {
         method: "POST",
         headers: {
@@ -56,17 +53,10 @@ const Home = () => {
         body: JSON.stringify({ personInput, reasonInput }),
       });
 
-      const res = await response.json();
-      const { data } = res;
-      // console.log("OpenAI replied...", data.text);
+      if (!response.ok) throw new Error('Network response was not ok');
 
-      setApiOutput((prevOutput) => [
-        ...(Array.isArray(prevOutput) ? prevOutput : []),
-        data.text,
-      ]);
-      setPersonInput("");
-      setReasonInput("");
-      setIsGenerating(true);
+      const { data } = await response.json();
+      setApiOutput(data.text || "No response from API");
     } catch (error) {
       console.error("Error in callGenerateEndpoint:", error);
       toast({
@@ -76,17 +66,15 @@ const Home = () => {
         duration: 3000,
         isClosable: true,
       });
-      // Handle the error accordingly, e.g., show a message to the user
     } finally {
       setIsGenerating(false);
     }
   };
 
-  const onUserChangedText = (event) => {
-    setReasonInput(event.target.value);
-  };
-  const onUserChangePerson = (event) => {
-    setPersonInput(event.target.value);
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    if (name === 'person') setPersonInput(value);
+    else if (name === 'reason') setReasonInput(value);
   };
 
   const copyToClipboard = () => {
@@ -100,197 +88,162 @@ const Home = () => {
     });
   };
 
+  const getColorModeStyle = (light, dark) => colorMode === "light" ? light : dark;
+
   return (
-    <>
-      <Layouts>
-        <VStack
-          mt="64px"
-          mb="32px"
-          maxW="760px"
-          align="left"
-          justify="end"
-          w="full"
-          minH="60vh"
-          mx="auto"
-          gap="6"
-        >
-          <VStack align="left">
-            <Heading fontWeight={600}>
-              Hi there,{" "}
-              <Box
-                as="span"
-                bgGradient="linear(to-br, pink.500, blackAlpha.800)"
-                bgClip="text"
-              >
-                {" "}
-                {address ? truncateText(address, 6) : "New User"}
-              </Box>
-            </Heading>
-            <Text
-              fontSize={16}
-              maxW="460px"
-              color={
-                colorMode === "light" ? "blackAlpha.600" : "whiteAlpha.600"
-              }
+    <Layouts>
+      <VStack
+        mt="64px"
+        mb="32px"
+        maxW="760px"
+        align="left"
+        justify="end"
+        w="full"
+        minH="60vh"
+        mx="auto"
+        gap="6"
+      >
+        <VStack align="left">
+          <Heading fontWeight={600}>
+            Hi there,{" "}
+            <Box
+              as="span"
+              bgGradient="linear(to-br, pink.500, blackAlpha.800)"
+              bgClip="text"
             >
-              You're finally here, use one of our common prompts below or use
-              your own to begin{" "}
-            </Text>
-          </VStack>
-          {apiOutput < 1 && (
-            <SimpleGrid columns={[2, 2, 4, 4]} spacing="12px" w="fit-content">
-              {Prompts.map((prompt, index) => (
-                <VStack
-                  key={index}
-                  align="left"
-                  p="16px"
-                  justify="space-between"
-                  h="160px"
-                  maxW="200px"
-                  borderWidth={1}
-                  borderColor={
-                    colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"
-                  }
-                  rounded="8px"
-                  _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
-                  onClick={() => handlePromptClick(prompt)}
-                >
-                  <VStack align="left" gap="2">
-                    <Text
-                      fontSize={11}
-                      color={
-                        colorMode === "light"
-                          ? "blackAlpha.700"
-                          : "whiteAlpha.600"
-                      }
-                      fontWeight={400}
-                    >
-                      {prompt.person}
-                    </Text>
-                    <Text fontSize={12} fontWeight={400}>
-                      {prompt.prompt}
-                    </Text>
-                  </VStack>
-                  <BiLoader />
-                </VStack>
-              ))}
-            </SimpleGrid>
-          )}
-          <VStack align="left" gap="16px">
-            {apiOutput && (
-              <>
-                {apiOutput?.map((output, index) => (
-                  <VStack
-                    key={index}
-                    align="left"
-                    w="full"
-                    bg={
-                      colorMode === "light"
-                        ? "blackAlpha.100"
-                        : "whiteAlpha.100"
-                    }
-                    p="16px"
-                    rounded="lg"
-                    gap="12px"
-                  >
-                    <Text dangerouslySetInnerHTML={{ __html: output }}></Text>
-                    <Flex align="center" gap="12px">
-                      <Box cursor="pointer" onClick={copyToClipboard}>
-                        <IoCopyOutline />
-                      </Box>
-                      <Box cursor="pointer">
-                        <PiShareFatLight />
-                      </Box>
-                    </Flex>
-                    {/* <Text>{output}</Text> */}
-                  </VStack>
-                ))}
-              </>
-            )}
-            {isGenerating && (
-              <Box>
-                <Spinner colorScheme="green" />
-              </Box>
-            )}
-          </VStack>
-          <VStack
-            align="left"
-            w="full"
-            // position="fixed"
-            // bottom="10"
-            // left="50%"
-            // transform="translateX(-50%)"
-            // zIndex="1000"
+              {address ? truncateText(address, 6) : "New User"}
+            </Box>
+          </Heading>
+          <Text
+            fontSize={16}
+            maxW="460px"
+            color={getColorModeStyle("blackAlpha.600", "whiteAlpha.600")}
           >
-            <Input
-              placeholder="Input person's description"
-              _placeholder={{
-                color:
-                  colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400",
-              }}
-              borderColor={
-                colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
-              }
-              value={personInput}
-              onChange={(e) => setPersonInput(e.target.value)}
-            />
-            <Textarea
-              placeholder="Write a prompt here..."
-              _placeholder={{
-                color:
-                  colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400",
-              }}
-              borderColor={
-                colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
-              }
-              rows={5}
-              value={reasonInput}
-              onChange={(e) => setReasonInput(e.target.value)}
-            />
-            {isConnected ? (
+            You're finally here, use one of our common prompts below or use
+            your own to begin{" "}
+          </Text>
+        </VStack>
+
+        {apiOutput === "" && (
+          <SimpleGrid columns={[2, 2, 4, 4]} spacing="12px" w="fit-content">
+            {Prompts.map((prompt, index) => (
+              <VStack
+                key={index}
+                align="left"
+                p="16px"
+                justify="space-between"
+                h="160px"
+                maxW="200px"
+                borderWidth={1}
+                borderColor={getColorModeStyle("blackAlpha.400", "whiteAlpha.400")}
+                rounded="8px"
+                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
+                onClick={() => handlePromptClick(prompt)}
+              >
+                <VStack align="left" gap="2">
+                  <Text
+                    fontSize={11}
+                    color={getColorModeStyle("blackAlpha.700", "whiteAlpha.600")}
+                    fontWeight={400}
+                  >
+                    {prompt.person}
+                  </Text>
+                  <Text fontSize={12} fontWeight={400}>
+                    {prompt.prompt}
+                  </Text>
+                </VStack>
+                <BiLoader />
+              </VStack>
+            ))}
+          </SimpleGrid>
+        )}
+
+        <VStack align="left" gap="16px">
+          {apiOutput && (
+            <VStack
+              align="left"
+              w="full"
+              bg={getColorModeStyle("blackAlpha.100", "whiteAlpha.100")}
+              p="16px"
+              rounded="lg"
+              gap="12px"
+              style={{ whiteSpace: 'pre-wrap' }} // Preserve formatting
+            >
+              <Text>
+                {apiOutput} {/* Ensure apiOutput has the correct format */}
+              </Text>
+              <Flex align="center" gap="12px">
+                <Box cursor="pointer" onClick={copyToClipboard} aria-label="Copy to clipboard">
+                  <IoCopyOutline />
+                </Box>
+                <Box cursor="pointer" aria-label="Share">
+                  <PiShareFatLight />
+                </Box>
+              </Flex>
+            </VStack>
+          )}
+          {isGenerating && (
+            <Box>
+              <Spinner colorScheme="green" />
+            </Box>
+          )}
+        </VStack>
+
+        <VStack align="left" w="full">
+          <Input
+            name="person"
+            placeholder="Input person's description"
+            _placeholder={{ color: getColorModeStyle("blackAlpha.400", "whiteAlpha.400") }}
+            borderColor={getColorModeStyle("blackAlpha.200", "whiteAlpha.200")}
+            value={personInput}
+            onChange={handleInputChange}
+          />
+          <Textarea
+            name="reason"
+            placeholder="Write a prompt here..."
+            _placeholder={{ color: getColorModeStyle("blackAlpha.400", "whiteAlpha.400") }}
+            borderColor={getColorModeStyle("blackAlpha.200", "whiteAlpha.200")}
+            rows={5}
+            value={reasonInput}
+            onChange={handleInputChange}
+          />
+          {isConnected ? (
+            <Button
+              rounded="lg"
+              size="md"
+              color="white"
+              bgGradient="linear(to-br, pink.500, blackAlpha.800)"
+              minW="160px"
+              alignSelf="flex-end"
+              _hover={{ bgGradient: "linear(to-tl, pink.500, blackAlpha.800)" }}
+              isLoading={isGenerating}
+              isDisabled={isGenerating || !reasonInput || !personInput}
+              onClick={callGenerateEndpoint}
+            >
+              Generate message
+            </Button>
+          ) : (
+            <Flex alignSelf="end">
               <Button
-                rounded="lg"
+                align="center"
+                gap="12px"
+                rounded="full"
+                variant="solid"
                 size="md"
                 color="white"
+                minW="140px"
                 bgGradient="linear(to-br, pink.500, blackAlpha.800)"
-                minW="160px"
-                alignSelf="flex-end"
-                _hover={{
-                  bgGradient: "linear(to-tl, pink.500, blackAlpha.800)",
-                }}
-                isLoading={isGenerating}
-                isDisabled={isGenerating || !reasonInput || !personInput}
-                onClick={callGenerateEndpoint}
+                _hover={{ bgGradient: "linear(to-tl, pink.500, blackAlpha.800)" }}
+                fontSize={12}
+                onClick={() => open({ view: "Connect" })}
               >
-                Generate message
+                Connect wallet
               </Button>
-            ) : (
-              <Flex alignSelf="end">
-                <Button
-                  align="center"
-                  gap="12px"
-                  rounded="full"
-                  variant="solid"
-                  size="md"
-                  color="white"
-                  minW="140px"
-                  bgGradient="linear(to-br, pink.500, blackAlpha.800)"
-                  _hover={{
-                    bgGradient: "linear(to-tl, pink.500, blackAlpha.800)",
-                  }}
-                  fontSize={12}
-                  onClick={() => {
-                    open({ view: "Connect" });
-                  }}
-                >
-                  Connect wallet
-                </Button>
-              </Flex>
-            )}
-          </VStack>
+            </Flex>
+          )}
         </VStack>
-      </Layouts>
-    </>
+      </VStack>
+    </Layouts>
   );
 };
 
