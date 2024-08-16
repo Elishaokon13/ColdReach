@@ -53,10 +53,16 @@ const Home = () => {
         body: JSON.stringify({ personInput, reasonInput }),
       });
 
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.ok) throw new Error("Network response was not ok");
 
       const { data } = await response.json();
-      setApiOutput(data.text || "No response from API");
+      setApiOutput((prevOutput) => [
+        ...(Array.isArray(prevOutput) ? prevOutput : []),
+        data.text,
+      ]);
+      setPersonInput("");
+      setReasonInput("");
+      setIsGenerating(false);
     } catch (error) {
       console.error("Error in callGenerateEndpoint:", error);
       toast({
@@ -73,8 +79,8 @@ const Home = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    if (name === 'person') setPersonInput(value);
-    else if (name === 'reason') setReasonInput(value);
+    if (name === "person") setPersonInput(value);
+    else if (name === "reason") setReasonInput(value);
   };
 
   const copyToClipboard = () => {
@@ -88,7 +94,8 @@ const Home = () => {
     });
   };
 
-  const getColorModeStyle = (light, dark) => colorMode === "light" ? light : dark;
+  const getColorModeStyle = (light, dark) =>
+    colorMode === "light" ? light : dark;
 
   return (
     <Layouts>
@@ -108,7 +115,7 @@ const Home = () => {
             Hi there,{" "}
             <Box
               as="span"
-              bgGradient="linear(to-br, pink.500, blackAlpha.800)"
+              bgGradient="linear(to-br, blue.600, blackAlpha.800)"
               bgClip="text"
             >
               {address ? truncateText(address, 6) : "New User"}
@@ -119,12 +126,12 @@ const Home = () => {
             maxW="460px"
             color={getColorModeStyle("blackAlpha.600", "whiteAlpha.600")}
           >
-            You're finally here, use one of our common prompts below or use
-            your own to begin{" "}
+            You're finally here, use one of our common prompts below or use your
+            own to begin{" "}
           </Text>
         </VStack>
 
-        {apiOutput === "" && (
+        {apiOutput?.length < 1 && (
           <SimpleGrid columns={[2, 2, 4, 4]} spacing="12px" w="fit-content">
             {Prompts.map((prompt, index) => (
               <VStack
@@ -135,7 +142,10 @@ const Home = () => {
                 h="160px"
                 maxW="200px"
                 borderWidth={1}
-                borderColor={getColorModeStyle("blackAlpha.400", "whiteAlpha.400")}
+                borderColor={getColorModeStyle(
+                  "blackAlpha.400",
+                  "whiteAlpha.400"
+                )}
                 rounded="8px"
                 _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
                 onClick={() => handlePromptClick(prompt)}
@@ -143,7 +153,10 @@ const Home = () => {
                 <VStack align="left" gap="2">
                   <Text
                     fontSize={11}
-                    color={getColorModeStyle("blackAlpha.700", "whiteAlpha.600")}
+                    color={getColorModeStyle(
+                      "blackAlpha.700",
+                      "whiteAlpha.600"
+                    )}
                     fontWeight={400}
                   >
                     {prompt.person}
@@ -160,27 +173,34 @@ const Home = () => {
 
         <VStack align="left" gap="16px">
           {apiOutput && (
-            <VStack
-              align="left"
-              w="full"
-              bg={getColorModeStyle("blackAlpha.100", "whiteAlpha.100")}
-              p="16px"
-              rounded="lg"
-              gap="12px"
-              style={{ whiteSpace: 'pre-wrap' }} // Preserve formatting
-            >
-              <Text>
-                {apiOutput} {/* Ensure apiOutput has the correct format */}
-              </Text>
-              <Flex align="center" gap="12px">
-                <Box cursor="pointer" onClick={copyToClipboard} aria-label="Copy to clipboard">
-                  <IoCopyOutline />
-                </Box>
-                <Box cursor="pointer" aria-label="Share">
-                  <PiShareFatLight />
-                </Box>
-              </Flex>
-            </VStack>
+            <>
+              {apiOutput.map((output, index) => (
+                <VStack
+                  key={index}
+                  align="left"
+                  w="full"
+                  bg={getColorModeStyle("blackAlpha.100", "whiteAlpha.100")}
+                  p="16px"
+                  rounded="lg"
+                  gap="12px"
+                  whiteSpace="pre-wrap"
+                >
+                  <Text>{output}</Text>
+                  <Flex align="center" gap="12px">
+                    <Box
+                      cursor="pointer"
+                      onClick={copyToClipboard}
+                      aria-label="Copy to clipboard"
+                    >
+                      <IoCopyOutline />
+                    </Box>
+                    <Box cursor="pointer" aria-label="Share">
+                      <PiShareFatLight />
+                    </Box>
+                  </Flex>
+                </VStack>
+              ))}
+            </>
           )}
           {isGenerating && (
             <Box>
@@ -193,7 +213,9 @@ const Home = () => {
           <Input
             name="person"
             placeholder="Input person's description"
-            _placeholder={{ color: getColorModeStyle("blackAlpha.400", "whiteAlpha.400") }}
+            _placeholder={{
+              color: getColorModeStyle("blackAlpha.400", "whiteAlpha.400"),
+            }}
             borderColor={getColorModeStyle("blackAlpha.200", "whiteAlpha.200")}
             value={personInput}
             onChange={handleInputChange}
@@ -201,7 +223,9 @@ const Home = () => {
           <Textarea
             name="reason"
             placeholder="Write a prompt here..."
-            _placeholder={{ color: getColorModeStyle("blackAlpha.400", "whiteAlpha.400") }}
+            _placeholder={{
+              color: getColorModeStyle("blackAlpha.400", "whiteAlpha.400"),
+            }}
             borderColor={getColorModeStyle("blackAlpha.200", "whiteAlpha.200")}
             rows={5}
             value={reasonInput}
@@ -212,10 +236,10 @@ const Home = () => {
               rounded="lg"
               size="md"
               color="white"
-              bgGradient="linear(to-br, pink.500, blackAlpha.800)"
+              bgGradient="linear(to-br, blue.600, blackAlpha.800)"
               minW="160px"
               alignSelf="flex-end"
-              _hover={{ bgGradient: "linear(to-tl, pink.500, blackAlpha.800)" }}
+              _hover={{ bgGradient: "linear(to-tl, blue.600, blackAlpha.800)" }}
               isLoading={isGenerating}
               isDisabled={isGenerating || !reasonInput || !personInput}
               onClick={callGenerateEndpoint}
@@ -232,8 +256,10 @@ const Home = () => {
                 size="md"
                 color="white"
                 minW="140px"
-                bgGradient="linear(to-br, pink.500, blackAlpha.800)"
-                _hover={{ bgGradient: "linear(to-tl, pink.500, blackAlpha.800)" }}
+                bgGradient="linear(to-br, blue.600, blackAlpha.800)"
+                _hover={{
+                  bgGradient: "linear(to-tl, blue.600, blackAlpha.800)",
+                }}
                 fontSize={12}
                 onClick={() => open({ view: "Connect" })}
               >
