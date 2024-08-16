@@ -11,7 +11,7 @@ import {
   useWeb3Modal,
   useWeb3ModalAccount,
 } from "@web3modal/ethers/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaCrown } from "react-icons/fa6";
 import { truncateText } from "../lib/utils";
 import { BsMoonFill, BsSunFill } from "react-icons/bs";
@@ -23,6 +23,15 @@ export default function Navbar() {
   const { address, isConnected } = useWeb3ModalAccount();
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [isPro, setIsPro] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+      setIsPro(userDetails?.is_pro);
+    }
+  }, []);
 
   const getColorModeStyle = (light, dark) =>
     colorMode === "light" ? light : dark;
@@ -85,10 +94,10 @@ export default function Navbar() {
                 bg: getColorModeStyle("blackAlpha.50", "whiteAlpha.50"),
               }}
               fontSize={12}
-              onClick={onOpen}
+              onClick={!isPro && onOpen}
             >
-              <FaCrown color={"#2b6cb0"} size={18} />
-              Upgrade to Pro{" "}
+              <FaCrown color={"orange"} size={18} />
+              {isPro ? "Pro User" : "Upgrade to Pro"}
             </Button>
             <Box
               cursor="pointer"

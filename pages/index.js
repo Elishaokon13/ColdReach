@@ -1,7 +1,7 @@
 import Image from "next/image";
 import copy from "copy-to-clipboard";
 import buildspaceLogo from "../assets/buildspace-logo.png";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layouts from "../src/components/layouts";
 import { BiLoader } from "react-icons/bi";
 import {
@@ -105,6 +105,16 @@ const Home = () => {
   const getColorModeStyle = (light, dark) =>
     colorMode === "light" ? light : dark;
 
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError(null);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   return (
     <Layouts>
       <VStack
@@ -155,7 +165,10 @@ const Home = () => {
                   "whiteAlpha.400"
                 )}
                 rounded="8px"
-                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
+                _hover={{
+                  bg: getColorModeStyle("blackAlpha.50", "whiteAlpha.50"),
+                  cursor: "pointer",
+                }}
                 onClick={() => handlePromptClick(prompt)}
               >
                 <VStack align="left" gap="2">
