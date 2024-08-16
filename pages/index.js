@@ -50,6 +50,7 @@ const Home = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("JWToken")}`,
         },
         body: JSON.stringify({ personInput, reasonInput }),
       });
@@ -242,7 +243,7 @@ const Home = () => {
             _hover={{ bgGradient: "linear(to-tl, blue.600, blackAlpha.800)" }}
             isLoading={isGenerating}
             isDisabled={
-              isGenerating || !reasonInput || !personInput || isConnected
+              isGenerating || !reasonInput || !personInput || !isConnected
             }
             onClick={callGenerateEndpoint}
           >
