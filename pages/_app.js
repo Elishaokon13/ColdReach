@@ -18,6 +18,14 @@ const mainnet = {
   rpcUrl: "https://cloudflare-eth.com",
 };
 
+const baseMainnet = {
+  chainId: 8453,
+  name: "Base",
+  currency: "ETH", // Base uses ETH as its native currency
+  explorerUrl: "https://basescan.org", // Similar to Etherscan, but for Base network
+  rpcUrl: "https://mainnet.base.org", // Official RPC URL for Base Mainnet
+};
+
 // 3. Create a metadata object
 const metadata = {
   name: "My Website",
@@ -48,7 +56,7 @@ const ethersConfig = defaultConfig({
 // 5. Create a AppKit instance
 createWeb3Modal({
   ethersConfig,
-  chains: [mainnet],
+  chains: [baseMainnet],
   projectId,
   enableSwaps: false, // true by default
   enableOnramp: false, // true by default

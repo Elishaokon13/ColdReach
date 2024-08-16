@@ -1,7 +1,7 @@
 import Image from "next/image";
 import copy from "copy-to-clipboard";
 import buildspaceLogo from "../assets/buildspace-logo.png";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Layouts from "../src/components/layouts";
 import { BiLoader } from "react-icons/bi";
 import {
@@ -18,10 +18,11 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import { useWeb3Modal, useWeb3ModalAccount } from "@web3modal/ethers/react";
 import { truncateText } from "../src/lib/utils";
 import { IoCopyOutline } from "react-icons/io5";
 import { PiShareFatLight } from "react-icons/pi";
+import { Prompts } from "../src/data";
 
 const Home = () => {
   const [reasonInput, setReasonInput] = useState("");
@@ -30,15 +31,14 @@ const Home = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState("");
 
+  const { open } = useWeb3Modal();
   const { address, chainId, isConnected } = useWeb3ModalAccount();
   const toast = useToast();
   const { colorMode } = useColorMode();
 
-  const handleVStackClick = () => {
-    setTextAreaValue(
-      "Write a blog post to explain the importance of investment."
-    );
-    // setTextAreaValue === reasonInput;
+  const handlePromptClick = (prompt) => {
+    setPersonInput(prompt.person);
+    setReasonInput(prompt.prompt);
   };
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -64,6 +64,8 @@ const Home = () => {
         ...(Array.isArray(prevOutput) ? prevOutput : []),
         data.text,
       ]);
+      setPersonInput("");
+      setReasonInput("");
       setIsGenerating(true);
     } catch (error) {
       console.error("Error in callGenerateEndpoint:", error);
@@ -108,7 +110,7 @@ const Home = () => {
           align="left"
           justify="end"
           w="full"
-          minH="80vh"
+          minH="60vh"
           mx="auto"
           gap="6"
         >
@@ -137,82 +139,41 @@ const Home = () => {
           </VStack>
           {apiOutput < 1 && (
             <SimpleGrid columns={[2, 2, 4, 4]} spacing="12px" w="fit-content">
-              <VStack
-                align="left"
-                p="16px"
-                justify="space-between"
-                h="160px"
-                maxW="200px"
-                borderWidth={1}
-                borderColor={
-                  colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
-                }
-                rounded="8px"
-                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
-                onClick={handleVStackClick}
-              >
-                <Text fontSize={12} fontWeight={400}>
-                  Write a blog post to explain the importance of investment.
-                </Text>
-                <BiLoader />
-              </VStack>
-              <VStack
-                align="left"
-                p="16px"
-                justify="space-between"
-                h="160px"
-                maxW="200px"
-                borderWidth={1}
-                borderColor={
-                  colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
-                }
-                rounded="8px"
-                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
-                onClick={handleVStackClick}
-              >
-                <Text fontSize={12} fontWeight={400}>
-                  Write a blog post to explain the importance of investment.
-                </Text>
-                <BiLoader />
-              </VStack>
-              <VStack
-                align="left"
-                p="16px"
-                justify="space-between"
-                h="160px"
-                maxW="200px"
-                borderWidth={1}
-                borderColor={
-                  colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
-                }
-                rounded="8px"
-                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
-                onClick={handleVStackClick}
-              >
-                <Text fontSize={12} fontWeight={400}>
-                  Write a blog post to explain the importance of investment.
-                </Text>
-                <BiLoader />
-              </VStack>
-              <VStack
-                align="left"
-                p="16px"
-                justify="space-between"
-                h="160px"
-                maxW="200px"
-                borderWidth={1}
-                borderColor={
-                  colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
-                }
-                rounded="8px"
-                _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
-                onClick={handleVStackClick}
-              >
-                <Text fontSize={12} fontWeight={400}>
-                  Write a blog post to explain the importance of investment.
-                </Text>
-                <BiLoader />
-              </VStack>
+              {Prompts.map((prompt, index) => (
+                <VStack
+                  key={index}
+                  align="left"
+                  p="16px"
+                  justify="space-between"
+                  h="160px"
+                  maxW="200px"
+                  borderWidth={1}
+                  borderColor={
+                    colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"
+                  }
+                  rounded="8px"
+                  _hover={{ bg: "blackAlpha.50", cursor: "pointer" }}
+                  onClick={() => handlePromptClick(prompt)}
+                >
+                  <VStack align="left" gap="2">
+                    <Text
+                      fontSize={11}
+                      color={
+                        colorMode === "light"
+                          ? "blackAlpha.700"
+                          : "whiteAlpha.600"
+                      }
+                      fontWeight={400}
+                    >
+                      {prompt.person}
+                    </Text>
+                    <Text fontSize={12} fontWeight={400}>
+                      {prompt.prompt}
+                    </Text>
+                  </VStack>
+                  <BiLoader />
+                </VStack>
+              ))}
             </SimpleGrid>
           )}
           <VStack align="left" gap="16px">
@@ -223,7 +184,11 @@ const Home = () => {
                     key={index}
                     align="left"
                     w="full"
-                    bg="blackAlpha.100"
+                    bg={
+                      colorMode === "light"
+                        ? "blackAlpha.100"
+                        : "whiteAlpha.100"
+                    }
                     p="16px"
                     rounded="lg"
                     gap="12px"
@@ -267,7 +232,7 @@ const Home = () => {
                 colorMode === "light" ? "blackAlpha.200" : "whiteAlpha.200"
               }
               value={personInput}
-              onChange={onUserChangePerson}
+              onChange={(e) => setPersonInput(e.target.value)}
             />
             <Textarea
               placeholder="Write a prompt here..."
@@ -280,7 +245,7 @@ const Home = () => {
               }
               rows={5}
               value={reasonInput}
-              onChange={onUserChangedText}
+              onChange={(e) => setReasonInput(e.target.value)}
             />
             {isConnected ? (
               <Button
@@ -301,7 +266,25 @@ const Home = () => {
               </Button>
             ) : (
               <Flex alignSelf="end">
-                <w3m-button balance={false} />
+                <Button
+                  align="center"
+                  gap="12px"
+                  rounded="full"
+                  variant="solid"
+                  size="md"
+                  color="white"
+                  minW="140px"
+                  bgGradient="linear(to-br, pink.500, blackAlpha.800)"
+                  _hover={{
+                    bgGradient: "linear(to-tl, pink.500, blackAlpha.800)",
+                  }}
+                  fontSize={12}
+                  onClick={() => {
+                    open({ view: "Connect" });
+                  }}
+                >
+                  Connect wallet
+                </Button>
               </Flex>
             )}
           </VStack>

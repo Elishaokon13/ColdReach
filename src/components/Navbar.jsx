@@ -43,7 +43,7 @@ export default function Navbar() {
           variant="solid"
           size="md"
           color="white"
-          minW="140px"
+          // minW="140px"
           bgGradient="linear(to-br, pink.500, blackAlpha.800)"
           _hover={{
             bgGradient: "linear(to-tl, pink.500, blackAlpha.800)",
@@ -70,7 +70,7 @@ export default function Navbar() {
             }}
             fontSize={12}
           >
-            <FaCrown size={18} />
+            <FaCrown color={'#d53f8c'} size={18} />
             Upgrade to Pro{" "}
           </Button>
           <Box
