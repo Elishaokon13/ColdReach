@@ -121,6 +121,7 @@ export default function ProModal({ isOpen, onClose }) {
           </ModalBody>
         </ModalContent>
       </Modal>
+      
     </>
   );
 }
