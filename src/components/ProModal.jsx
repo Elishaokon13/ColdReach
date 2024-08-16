@@ -20,9 +20,12 @@ import {
 } from "@chakra-ui/react";
 import { BiCheck } from "react-icons/bi";
 import { BsXLg } from "react-icons/bs";
+import { CoinbaseButton } from "./PayButton";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 
 export default function ProModal({ isOpen, onClose }) {
   const { colorMode } = useColorMode();
+  const { address } = useWeb3ModalAccount();  
 
   const getColorModeStyle = (light, dark) =>
     colorMode === "light" ? light : dark;
@@ -117,11 +120,11 @@ export default function ProModal({ isOpen, onClose }) {
                   <BsXLg size={20} />
                 </Button>
               </Flex>
+              <CoinbaseButton destinationWalletAddress={address} />
             </VStack>
           </ModalBody>
         </ModalContent>
       </Modal>
-      
     </>
   );
 }

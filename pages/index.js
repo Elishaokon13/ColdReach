@@ -24,12 +24,14 @@ import { IoCopyOutline } from "react-icons/io5";
 import { PiShareFatLight } from "react-icons/pi";
 import { Prompts } from "../src/data";
 import useSubmitAddress from "../src/hook/submitAddress";
+import { BsExclamationCircle } from "react-icons/bs";
 
 const Home = () => {
   const [reasonInput, setReasonInput] = useState("");
   const [personInput, setPersonInput] = useState("");
   const [apiOutput, setApiOutput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState(null);
 
   const { address, isConnected } = useWeb3ModalAccount();
   const toast = useToast();
@@ -55,7 +57,11 @@ const Home = () => {
         body: JSON.stringify({ personInput, reasonInput }),
       });
 
-      if (!response.ok) throw new Error("Network response was not ok");
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.message || "Network response was not ok");
+        throw new Error(errorData.message || "Network response was not ok");
+      }
 
       const { data } = await response.json();
       setApiOutput((prevOutput) => [
@@ -69,7 +75,7 @@ const Home = () => {
       console.error("Error in callGenerateEndpoint:", error);
       toast({
         title: "Error",
-        description: "Failed to generate response",
+        description: error.message || "Failed to generate response",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -203,6 +209,21 @@ const Home = () => {
                 </VStack>
               ))}
             </>
+          )}
+          {error && (
+            <Flex
+              align="center"
+              w="full"
+              bg={getColorModeStyle("blackAlpha.100", "whiteAlpha.100")}
+              color="red.500"
+              p="16px"
+              rounded="lg"
+              gap="12px"
+              whiteSpace="pre-wrap"
+            >
+              <BsExclamationCircle />
+              {error}
+            </Flex>
           )}
           {isGenerating && (
             <Box>
