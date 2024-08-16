@@ -94,7 +94,7 @@ export default function Navbar() {
                 bg: getColorModeStyle("blackAlpha.50", "whiteAlpha.50"),
               }}
               fontSize={12}
-              onClick={!isPro && onOpen}
+              onClick={!isPro ? onOpen : undefined}
             >
               <FaCrown color={"orange"} size={18} />
               {isPro ? "Pro User" : "Upgrade to Pro"}

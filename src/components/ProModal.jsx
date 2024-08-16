@@ -120,7 +120,7 @@ export default function ProModal({ isOpen, onClose }) {
                   <BsXLg size={20} />
                 </Button>
               </Flex>
-              <CoinbaseButton destinationWalletAddress={address} />
+              {/* <CoinbaseButton destinationWalletAddress={address} /> */}
             </VStack>
           </ModalBody>
         </ModalContent>
