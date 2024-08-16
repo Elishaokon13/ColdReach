@@ -1,7 +1,7 @@
 import Image from "next/image";
 import copy from "copy-to-clipboard";
 import buildspaceLogo from "../assets/buildspace-logo.png";
-import { useCallback, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Layouts from "../src/components/layouts";
 import { BiLoader } from "react-icons/bi";
 import {
@@ -18,11 +18,12 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useWeb3Modal, useWeb3ModalAccount } from "@web3modal/ethers/react";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import { truncateText } from "../src/lib/utils";
 import { IoCopyOutline } from "react-icons/io5";
 import { PiShareFatLight } from "react-icons/pi";
 import { Prompts } from "../src/data";
+import useSubmitAddress from "../src/hook/submitAddress";
 
 const Home = () => {
   const [reasonInput, setReasonInput] = useState("");
@@ -30,7 +31,6 @@ const Home = () => {
   const [apiOutput, setApiOutput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const { open } = useWeb3Modal();
   const { address, isConnected } = useWeb3ModalAccount();
   const toast = useToast();
   const { colorMode } = useColorMode();
@@ -41,6 +41,7 @@ const Home = () => {
   };
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  useSubmitAddress(isConnected, address, API_URL);
 
   const callGenerateEndpoint = async () => {
     try {
@@ -231,42 +232,22 @@ const Home = () => {
             value={reasonInput}
             onChange={handleInputChange}
           />
-          {isConnected ? (
-            <Button
-              rounded="lg"
-              size="md"
-              color="white"
-              bgGradient="linear(to-br, blue.600, blackAlpha.800)"
-              minW="160px"
-              alignSelf="flex-end"
-              _hover={{ bgGradient: "linear(to-tl, blue.600, blackAlpha.800)" }}
-              isLoading={isGenerating}
-              isDisabled={isGenerating || !reasonInput || !personInput}
-              onClick={callGenerateEndpoint}
-            >
-              Generate message
-            </Button>
-          ) : (
-            <Flex alignSelf="end">
-              <Button
-                align="center"
-                gap="12px"
-                rounded="full"
-                variant="solid"
-                size="md"
-                color="white"
-                minW="140px"
-                bgGradient="linear(to-br, blue.600, blackAlpha.800)"
-                _hover={{
-                  bgGradient: "linear(to-tl, blue.600, blackAlpha.800)",
-                }}
-                fontSize={12}
-                onClick={() => open({ view: "Connect" })}
-              >
-                Connect wallet
-              </Button>
-            </Flex>
-          )}
+          <Button
+            rounded="lg"
+            size="md"
+            color="white"
+            bgGradient="linear(to-br, blue.600, blackAlpha.800)"
+            minW="160px"
+            alignSelf="flex-end"
+            _hover={{ bgGradient: "linear(to-tl, blue.600, blackAlpha.800)" }}
+            isLoading={isGenerating}
+            isDisabled={
+              isGenerating || !reasonInput || !personInput || isConnected
+            }
+            onClick={callGenerateEndpoint}
+          >
+            Generate message
+          </Button>
         </VStack>
       </VStack>
     </Layouts>
