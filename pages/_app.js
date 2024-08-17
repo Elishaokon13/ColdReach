@@ -5,6 +5,8 @@ import theme from "../src/theme/theme";
 import "@fontsource-variable/inter";
 
 import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
+import { Provider } from "react-redux";
+import { store } from "../src/services/store";
 
 // 1. Get projectId
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
@@ -66,9 +68,12 @@ createWeb3Modal({
 });
 
 function App({ Component, pageProps }) {
+  
   return (
     <ChakraProvider theme={theme} cssVarsRoot="body">
-      <Component {...pageProps} />
+     <Provider store={store}>
+     <Component {...pageProps} />
+     </Provider>
     </ChakraProvider>
   );
 }

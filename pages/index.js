@@ -20,16 +20,32 @@ import { truncateText } from "../src/lib/utils";
 import { IoCopyOutline } from "react-icons/io5";
 import { PiShareFatLight } from "react-icons/pi";
 import { Prompts } from "../src/data";
-import useSubmitAddress from "../src/hook/submitAddress";
+// import useSubmitAddress from "../src/hook/submitAddress";
 import { BsExclamationCircle } from "react-icons/bs";
+import {
+  useAuthenticateMutation,
+  usePromptMutation,
+} from "../src/services/route";
+import { useDispatch, useSelector } from "react-redux";
+import { loadUserFromStorage, setUser } from "../src/services/redux";
 
-const Home = () => {
+function Home() {
+  const user = useSelector((state) => state.user.user);
+  const token = user?.accessToken;
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // Load the user from localStorage on client-side only
+    dispatch(loadUserFromStorage());
+  }, [dispatch]);
   const [reasonInput, setReasonInput] = useState("");
   const [personInput, setPersonInput] = useState("");
   const [apiOutput, setApiOutput] = useState([]);
   const [displayText, setDisplayText] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [authenticate] = useAuthenticateMutation();
+  const [prompt, { isLoading, error }] = usePromptMutation();
 
   const { address, isConnected } = useWeb3ModalAccount();
   const toast = useToast();
@@ -41,39 +57,59 @@ const Home = () => {
   };
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  useSubmitAddress(isConnected, address, API_URL);
+  // useSubmitAddress(isConnected, address, API_URL);
+
+  useEffect(() => {
+    const submitAddress = async () => {
+      try {
+        const data = { address };
+        console.log(data);
+        const res = await authenticate(data).unwrap();
+        dispatch(setUser(res.data));
+      } catch (error) {
+        console.error("Error in submitAddress:", error);
+      }
+    };
+    if (isConnected) {
+      submitAddress();
+    }
+  }, [isConnected]);
 
   const callGenerateEndpoint = async () => {
     try {
-      setIsGenerating(true);
-      const response = await fetch(`${API_URL}/prompt`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("JWToken")}`,
-        },
-        body: JSON.stringify({ personInput, reasonInput }),
-      });
+      const data = { personInput, reasonInput };
+      const res = await prompt({ data, token }).unwrap();
+      console.log(res);
+      // setIsGenerating(true);
+      // const response = await fetch(`${API_URL}/prompt`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${localStorage.getItem("JWToken")}`,
+      //   },
+      //   body: JSON.stringify({ personInput, reasonInput }),
+      // });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.message || "Network response was not ok");
-        throw new Error(errorData.message || "Network response was not ok");
-      }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   setError(errorData.message || "Network response was not ok");
+      //   throw new Error(errorData.message || "Network response was not ok");
+      // }
 
-      const { data } = await response.json();
+      // const { data } = await response.json();
       setApiOutput((prevOutput) => [
         ...(Array.isArray(prevOutput) ? prevOutput : []),
-        data.text,
+        res.data.text,
       ]);
 
       // Start typing effect
-      startTypingEffect(data.text);
+      startTypingEffect(res.data.text);
 
       setPersonInput("");
       setReasonInput("");
-      setIsGenerating(false);
+      // setIsGenerating(false);
     } catch (error) {
+      setErrorMessage(error.data.message || "Network response was not ok");
       console.error("Error in callGenerateEndpoint:", error);
       toast({
         title: "Error",
@@ -83,7 +119,7 @@ const Home = () => {
         isClosable: true,
       });
     } finally {
-      setIsGenerating(false);
+      // setIsGenerating(false);
     }
   };
 
@@ -119,7 +155,7 @@ const Home = () => {
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => {
-        setError(null);
+        setErrorMessage(null);
       }, 5000);
 
       return () => clearTimeout(timer);
@@ -226,7 +262,7 @@ const Home = () => {
               </VStack>
             </>
           )}
-          {error && (
+          {errorMessage && (
             <Flex
               align="center"
               w="full"
@@ -238,10 +274,10 @@ const Home = () => {
               whiteSpace="pre-wrap"
             >
               <BsExclamationCircle />
-              {error}
+              {errorMessage}
             </Flex>
           )}
-          {isGenerating && (
+          {isLoading && (
             <Box>
               <Spinner colorScheme="green" />
             </Box>
@@ -278,9 +314,9 @@ const Home = () => {
             minW="160px"
             alignSelf="flex-end"
             _hover={{ bgGradient: "linear(to-tl, blue.600, blackAlpha.800)" }}
-            isLoading={isGenerating}
+            isLoading={isLoading}
             isDisabled={
-              isGenerating || !reasonInput || !personInput || !isConnected
+              isLoading || !reasonInput || !personInput || !isConnected
             }
             onClick={callGenerateEndpoint}
           >
@@ -290,6 +326,6 @@ const Home = () => {
       </VStack>
     </Layouts>
   );
-};
+}
 
 export default Home;
