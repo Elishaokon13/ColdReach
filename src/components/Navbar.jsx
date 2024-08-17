@@ -19,16 +19,19 @@ import ProModal from "./ProModal";
 
 export default function Navbar() {
   // const [isPro, setIsPro] = useState(false);
-  const [usreDetails, setUserDetails] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
+
+
   // console.log(isPro);
 
-  useEffect(()=> {
+  useEffect(() => {
     if (typeof window !== "undefined") {
-      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-      setUserDetails(userDetails);
-      // console.log(userDetails);
+      const storedUserDetails = localStorage.getItem("userDetails");
+      if (storedUserDetails) {
+        setUserDetails(JSON.parse(storedUserDetails));
+      }
     }
-  }, [])
+  }, [address]);
 
   const { open } = useWeb3Modal();
   const { disconnect } = useDisconnect();
@@ -118,13 +121,13 @@ export default function Navbar() {
                 bg: getColorModeStyle("blackAlpha.50", "whiteAlpha.50"),
               }}
               fontSize={12}
-              onClick={!usreDetails?.is_pro ? onOpen : undefined}
+              onClick={userDetails?.is_pro === false ? onOpen : undefined}
             >
               <FaCrown
-                color={usreDetails?.is_pro === true ? "orange" : "#2b6cb0"}
+                color={userDetails?.is_pro === true ? "orange" : "#2b6cb0"}
                 size={18}
               />
-              {usreDetails?.is_pro === true ? "Pro User" : "Upgrade to Pro"}
+              {userDetails?.is_pro === true ? "Pro User" : "Upgrade to Pro"}
             </Button>
             <Box
               cursor="pointer"
