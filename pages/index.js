@@ -15,7 +15,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
-import Layouts from '../src/components/layouts';
+import Layouts from "../src/components/layouts";
 import { truncateText } from "../src/lib/utils";
 import { IoCopyOutline } from "react-icons/io5";
 import { PiShareFatLight } from "react-icons/pi";
@@ -199,7 +199,7 @@ const Home = () => {
         )}
 
         <VStack align="left" gap="16px">
-          {apiOutput && (
+          {displayText && (
             <>
               <VStack
                 align="left"
@@ -210,11 +210,7 @@ const Home = () => {
                 gap="12px"
                 whiteSpace="pre-wrap"
               >
-                <Typical
-                  steps={[displayText, 1000]}
-                  loop={1}
-                  wrapper="p"
-                />
+                <Typical steps={[displayText, 600]} loop={1} wrapper="p" />
                 <Flex align="center" gap="12px">
                   <Box
                     cursor="pointer"
