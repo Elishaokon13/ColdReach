@@ -20,6 +20,11 @@ import ProModal from "./ProModal";
 export default function Navbar() {
   // const [isPro, setIsPro] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
+  const { open } = useWeb3Modal();
+  const { disconnect } = useDisconnect();
+  const { address, isConnected } = useWeb3ModalAccount();
+  const { colorMode, toggleColorMode } = useColorMode();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
 
   // console.log(isPro);
@@ -33,11 +38,6 @@ export default function Navbar() {
     }
   }, [address]);
 
-  const { open } = useWeb3Modal();
-  const { disconnect } = useDisconnect();
-  const { address, isConnected } = useWeb3ModalAccount();
-  const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
  
 
