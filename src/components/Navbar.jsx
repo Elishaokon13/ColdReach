@@ -22,11 +22,13 @@ import { FaCrown } from "react-icons/fa6";
 import { truncateText } from "../lib/utils";
 import { BsMoonFill, BsSunFill } from "react-icons/bs";
 import ProModal from "./ProModal";
-import { SlMenu } from "react-icons/sl";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
+  const user = useSelector ((state) => state.user.user);
+  const userDetails = user?.user;
+
   // const [isPro, setIsPro] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
   const { open } = useWeb3Modal();
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useWeb3ModalAccount();
@@ -35,14 +37,7 @@ export default function Navbar() {
 
   // console.log(isPro);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUserDetails = localStorage.getItem("userDetails");
-      if (storedUserDetails) {
-        setUserDetails(JSON.parse(storedUserDetails));
-      }
-    }
-  }, [address]);
+  
 
   useEffect(() => {
     let attempts = 0;
