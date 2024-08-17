@@ -18,7 +18,17 @@ import { BsMoonFill, BsSunFill } from "react-icons/bs";
 import ProModal from "./ProModal";
 
 export default function Navbar() {
-  const [isPro, setIsPro] = useState(false);
+  // const [isPro, setIsPro] = useState(false);
+  const [usreDetails, setUserDetails] = useState(null);
+  // console.log(isPro);
+
+  useEffect(()=> {
+    if (typeof window !== "undefined") {
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+      setUserDetails(userDetails);
+      // console.log(userDetails);
+    }
+  }, [])
 
   const { open } = useWeb3Modal();
   const { disconnect } = useDisconnect();
@@ -26,31 +36,25 @@ export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const fetchUserDetails = () => {
-    if (typeof window !== "undefined") {
-      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-      setIsPro(userDetails?.is_pro);
-      // console.log(userDetails);
-    }
-  };
+ 
 
   useEffect(() => {
     let attempts = 0;
-    const intervalId = setInterval(() => {
-      if (attempts < 3) {
-        fetchUserDetails();
-        attempts += 1;
-      } else {
-        clearInterval(intervalId);
-      }
-    }, 2000);
+    // const intervalId = setInterval(() => {
+    //   if (attempts < 3) {
+    //     // fetchUserDetails();
+    //     attempts += 1;
+    //   } else {
+    //     clearInterval(intervalId);
+    //   }
+    // }, 2000);
 
     if (!address || !isConnected) {
       localStorage.removeItem("userDetails");
       localStorage.removeItem("JWToken");
     }
 
-    return () => clearInterval(intervalId);
+    // return () => clearInterval(intervalId);
   }, [address, isConnected]);
 
   const getColorModeStyle = (light, dark) =>
@@ -114,13 +118,13 @@ export default function Navbar() {
                 bg: getColorModeStyle("blackAlpha.50", "whiteAlpha.50"),
               }}
               fontSize={12}
-              onClick={!isPro ? onOpen : undefined}
+              onClick={!usreDetails?.is_pro ? onOpen : undefined}
             >
               <FaCrown
-                color={isPro === true ? "orange" : "#2b6cb0"}
+                color={usreDetails?.is_pro === true ? "orange" : "#2b6cb0"}
                 size={18}
               />
-              {isPro === true ? "Pro User" : "Upgrade to Pro"}
+              {usreDetails?.is_pro === true ? "Pro User" : "Upgrade to Pro"}
             </Button>
             <Box
               cursor="pointer"
