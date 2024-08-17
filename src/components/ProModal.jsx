@@ -113,6 +113,7 @@ export default function ProModal({ isOpen, onClose }) {
                   _hover={{
                     bgGradient: "linear(to-tl, blue.600, blackAlpha.800)",
                   }}
+                  isDisabled
                 >
                   Upgrade
                 </Button>

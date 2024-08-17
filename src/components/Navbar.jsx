@@ -18,20 +18,40 @@ import { BsMoonFill, BsSunFill } from "react-icons/bs";
 import ProModal from "./ProModal";
 
 export default function Navbar() {
+  const [isPro, setIsPro] = useState(false);
+
   const { open } = useWeb3Modal();
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useWeb3ModalAccount();
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [isPro, setIsPro] = useState(false);
-
-  useEffect(() => {
+  const fetchUserDetails = () => {
     if (typeof window !== "undefined") {
       const userDetails = JSON.parse(localStorage.getItem("userDetails"));
       setIsPro(userDetails?.is_pro);
+      // console.log(userDetails);
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    let attempts = 0;
+    const intervalId = setInterval(() => {
+      if (attempts < 3) {
+        fetchUserDetails();
+        attempts += 1;
+      } else {
+        clearInterval(intervalId);
+      }
+    }, 2000);
+
+    if (!address || !isConnected) {
+      localStorage.removeItem("userDetails");
+      localStorage.removeItem("JWToken");
+    }
+
+    return () => clearInterval(intervalId);
+  }, [address, isConnected]);
 
   const getColorModeStyle = (light, dark) =>
     colorMode === "light" ? light : dark;
@@ -96,8 +116,11 @@ export default function Navbar() {
               fontSize={12}
               onClick={!isPro ? onOpen : undefined}
             >
-              <FaCrown color={"orange"} size={18} />
-              {isPro ? "Pro User" : "Upgrade to Pro"}
+              <FaCrown
+                color={isPro === true ? "orange" : "#2b6cb0"}
+                size={18}
+              />
+              {isPro === true ? "Pro User" : "Upgrade to Pro"}
             </Button>
             <Box
               cursor="pointer"

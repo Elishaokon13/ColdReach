@@ -14,8 +14,8 @@ const useSubmitAddress = (isConnected, address, API_URL) => {
       if (!response.ok) throw new Error("Network response was not ok");
 
       const { data } = await response.json();
-      localStorage.setItem("JWToken", data.accessToken);
       localStorage.setItem("userDetails", JSON.stringify(data.user));
+      localStorage.setItem("JWToken", data.accessToken);
       //   console.log(data.accessToken);
     } catch (error) {
       console.error("Error in submitAddress:", error);
