@@ -1,9 +1,5 @@
-import Image from "next/image";
-import copy from "copy-to-clipboard";
-// import buildspaceLogo from "../assets/buildspace-logo.png";
-import { useEffect, useState } from "react";
-import Layouts from "../src/components/layouts";
-import { BiLoader } from "react-icons/bi";
+import React, { useEffect, useState } from "react";
+import Typical from "react-typical";
 import {
   Box,
   Button,
@@ -19,6 +15,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import Layouts from '../src/components/layouts';
 import { truncateText } from "../src/lib/utils";
 import { IoCopyOutline } from "react-icons/io5";
 import { PiShareFatLight } from "react-icons/pi";
@@ -29,7 +26,8 @@ import { BsExclamationCircle } from "react-icons/bs";
 const Home = () => {
   const [reasonInput, setReasonInput] = useState("");
   const [personInput, setPersonInput] = useState("");
-  const [apiOutput, setApiOutput] = useState("");
+  const [apiOutput, setApiOutput] = useState([]);
+  const [displayText, setDisplayText] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState(null);
 
@@ -68,6 +66,10 @@ const Home = () => {
         ...(Array.isArray(prevOutput) ? prevOutput : []),
         data.text,
       ]);
+
+      // Start typing effect
+      startTypingEffect(data.text);
+
       setPersonInput("");
       setReasonInput("");
       setIsGenerating(false);
@@ -85,6 +87,15 @@ const Home = () => {
     }
   };
 
+  const startTypingEffect = (text) => {
+    let index = 0;
+    const interval = setInterval(() => {
+      setDisplayText(text.slice(0, index));
+      index += 1;
+      if (index > text.length) clearInterval(interval);
+    }, 50); // Adjust typing speed by changing the interval delay
+  };
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     if (name === "person") setPersonInput(value);
@@ -92,7 +103,7 @@ const Home = () => {
   };
 
   const copyToClipboard = () => {
-    copy(apiOutput);
+    copy(displayText);
     toast({
       title: "Success",
       description: "Copied to clipboard",
@@ -182,7 +193,6 @@ const Home = () => {
                     {prompt.prompt}
                   </Text>
                 </VStack>
-                <BiLoader />
               </VStack>
             ))}
           </SimpleGrid>
@@ -191,32 +201,33 @@ const Home = () => {
         <VStack align="left" gap="16px">
           {apiOutput && (
             <>
-              {apiOutput.map((output, index) => (
-                <VStack
-                  key={index}
-                  align="left"
-                  w="full"
-                  bg={getColorModeStyle("blackAlpha.100", "whiteAlpha.100")}
-                  p="16px"
-                  rounded="lg"
-                  gap="12px"
-                  whiteSpace="pre-wrap"
-                >
-                  <Text>{output}</Text>
-                  <Flex align="center" gap="12px">
-                    <Box
-                      cursor="pointer"
-                      onClick={copyToClipboard}
-                      aria-label="Copy to clipboard"
-                    >
-                      <IoCopyOutline />
-                    </Box>
-                    <Box cursor="pointer" aria-label="Share">
-                      <PiShareFatLight />
-                    </Box>
-                  </Flex>
-                </VStack>
-              ))}
+              <VStack
+                align="left"
+                w="full"
+                bg={getColorModeStyle("blackAlpha.100", "whiteAlpha.100")}
+                p="16px"
+                rounded="lg"
+                gap="12px"
+                whiteSpace="pre-wrap"
+              >
+                <Typical
+                  steps={[displayText, 1000]}
+                  loop={1}
+                  wrapper="p"
+                />
+                <Flex align="center" gap="12px">
+                  <Box
+                    cursor="pointer"
+                    onClick={copyToClipboard}
+                    aria-label="Copy to clipboard"
+                  >
+                    <IoCopyOutline />
+                  </Box>
+                  <Box cursor="pointer" aria-label="Share">
+                    <PiShareFatLight />
+                  </Box>
+                </Flex>
+              </VStack>
             </>
           )}
           {error && (
