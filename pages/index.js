@@ -131,11 +131,7 @@ const Home = () => {
         <VStack align="left">
           <Heading fontWeight={600}>
             Hi there,{" "}
-            <Box
-              as="span"
-              bgGradient="linear(to-br, blue.600, blackAlpha.800)"
-              bgClip="text"
-            >
+            <Box as="span" color="blue.600">
               {address ? truncateText(address, 6) : "New User"}
             </Box>
           </Heading>

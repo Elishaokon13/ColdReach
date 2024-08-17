@@ -21,16 +21,17 @@ const mainnet = {
 const baseMainnet = {
   chainId: 8453,
   name: "Base",
-  currency: "ETH", // Base uses ETH as its native currency
-  explorerUrl: "https://basescan.org", // Similar to Etherscan, but for Base network
-  rpcUrl: "https://mainnet.base.org", // Official RPC URL for Base Mainnet
+  currency: "ETH",
+  explorerUrl: "https://basescan.org",
+  rpcUrl: "https://mainnet.base.org",
 };
 
 // 3. Create a metadata object
 const metadata = {
-  name: "My Website",
-  description: "My Website description",
-  url: "https://mywebsite.com", // origin must match your domain & subdomain
+  name: "ColdReach",
+  description:
+    "ColdReach is a decentralized platform for user to generate neat DMs for their clients.",
+  url: "https://coldreach.xyz",
   icons: ["https://avatars.mywebsite.com/"],
 };
 
@@ -40,17 +41,18 @@ const ethersConfig = defaultConfig({
   metadata,
 
   /*Optional*/
-  enableEIP6963: true, // true by default
-  enableInjected: true, // true by default
-  enableCoinbase: true, // true by default
+  enableEIP6963: true,
+  enableInjected: true,
+  enableCoinbase: true,
   auth: {
     email: true,
-    socials: ["google", "x", "github", "discord", "farcaster"], // add social logins
+    socials: ["google", "x", "github", "discord", "farcaster"],
     showWallets: true,
-    walletFeatures: false,
+    walletFeatures: true,
   },
-  rpcUrl: "...", // used for the Coinbase SDK
-  defaultChainId: 1, // used for the Coinbase SDK
+  rpcUrl: "...",
+  defaultChainId: 1,
+  coinbasePreference: "smartWalletOnly",
 });
 
 // 5. Create a AppKit instance
@@ -58,9 +60,9 @@ createWeb3Modal({
   ethersConfig,
   chains: [baseMainnet],
   projectId,
-  enableSwaps: true, // true by default
-  enableOnramp: true, // true by default
-  enableAnalytics: true, // Optional - defaults to your Cloud configuration
+  enableSwaps: true,
+  enableOnramp: true,
+  enableAnalytics: true,
 });
 
 function App({ Component, pageProps }) {
