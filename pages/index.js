@@ -1,6 +1,6 @@
 import Image from "next/image";
 import copy from "copy-to-clipboard";
-import buildspaceLogo from "../assets/buildspace-logo.png";
+// import buildspaceLogo from "../assets/buildspace-logo.png";
 import { useEffect, useState } from "react";
 import Layouts from "../src/components/layouts";
 import { BiLoader } from "react-icons/bi";
