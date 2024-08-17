@@ -58,8 +58,8 @@ createWeb3Modal({
   ethersConfig,
   chains: [baseMainnet],
   projectId,
-  enableSwaps: false, // true by default
-  enableOnramp: false, // true by default
+  enableSwaps: true, // true by default
+  enableOnramp: true, // true by default
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
 });
 
