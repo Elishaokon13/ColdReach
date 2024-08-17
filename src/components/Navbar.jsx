@@ -2,6 +2,12 @@ import {
   Box,
   Button,
   Flex,
+  Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Show,
   useColorMode,
   useDisclosure,
   VStack,
@@ -16,6 +22,7 @@ import { FaCrown } from "react-icons/fa6";
 import { truncateText } from "../lib/utils";
 import { BsMoonFill, BsSunFill } from "react-icons/bs";
 import ProModal from "./ProModal";
+import { SlMenu } from "react-icons/sl";
 
 export default function Navbar() {
   // const [isPro, setIsPro] = useState(false);
@@ -25,7 +32,6 @@ export default function Navbar() {
   const { address, isConnected } = useWeb3ModalAccount();
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
 
   // console.log(isPro);
 
@@ -37,9 +43,6 @@ export default function Navbar() {
       }
     }
   }, [address]);
-
-
- 
 
   useEffect(() => {
     let attempts = 0;
@@ -106,43 +109,106 @@ export default function Navbar() {
           >
             {isConnected ? <>{truncateText(address, 10)}</> : "Connect wallet"}
           </Button>
-          <Flex align="center" gap="12px">
-            <Button
-              align="center"
-              gap="12px"
-              rounded="full"
-              variant="outline"
-              color={getColorModeStyle("blackAlpha.800", "whiteAlpha.800")}
-              borderColor={getColorModeStyle(
-                "blackAlpha.200",
-                "whiteAlpha.200"
-              )}
-              _hover={{
-                bg: getColorModeStyle("blackAlpha.50", "whiteAlpha.50"),
-              }}
-              fontSize={12}
-              onClick={userDetails?.is_pro === false ? onOpen : undefined}
-            >
-              <FaCrown
-                color={userDetails?.is_pro === true ? "orange" : "#2b6cb0"}
-                size={18}
-              />
-              {userDetails?.is_pro === true ? "Pro User" : "Upgrade to Pro"}
-            </Button>
-            <Box
-              cursor="pointer"
-              p="8px"
-              rounded="full"
-              borderWidth="1px"
-              borderColor={getColorModeStyle(
-                "blackAlpha.200",
-                "whiteAlpha.200"
-              )}
-              onClick={toggleColorMode}
-            >
-              {getColorModeStyle(<BsMoonFill />, <BsSunFill />)}
-            </Box>
-          </Flex>
+          <Image src="/coldreach.png" alt="" w="40px" />
+          <Show above="md">
+            <Flex align="center" gap="12px">
+              <Button
+                align="center"
+                gap="12px"
+                rounded="full"
+                variant="outline"
+                color={getColorModeStyle("blackAlpha.800", "whiteAlpha.800")}
+                borderColor={getColorModeStyle(
+                  "blackAlpha.200",
+                  "whiteAlpha.200"
+                )}
+                _hover={{
+                  bg: getColorModeStyle("blackAlpha.50", "whiteAlpha.50"),
+                }}
+                fontSize={12}
+                onClick={userDetails?.is_pro === false ? onOpen : undefined}
+              >
+                <FaCrown
+                  color={userDetails?.is_pro === true ? "orange" : "#2b6cb0"}
+                  size={18}
+                />
+                {userDetails?.is_pro === true ? "Pro User" : "Upgrade to Pro"}
+              </Button>
+              <Box
+                cursor="pointer"
+                p="8px"
+                rounded="full"
+                borderWidth="1px"
+                borderColor={getColorModeStyle(
+                  "blackAlpha.200",
+                  "whiteAlpha.200"
+                )}
+                onClick={toggleColorMode}
+              >
+                {getColorModeStyle(<BsMoonFill />, <BsSunFill />)}
+              </Box>
+            </Flex>
+          </Show>
+          <Show below="md">
+            <Menu>
+              <MenuButton>
+                <SlMenu />
+              </MenuButton>
+              <MenuList
+                px="12px"
+                align="center"
+                border="none"
+                justify="center"
+                minW="fit-content"
+                bg={getColorModeStyle("whiteAlpha.800", "#17171D")}
+              >
+                <Flex w="fit-content" gap="16px" align="center">
+                  <Button
+                    align="center"
+                    gap="12px"
+                    rounded="full"
+                    variant="outline"
+                    color={getColorModeStyle(
+                      "blackAlpha.800",
+                      "whiteAlpha.800"
+                    )}
+                    borderColor={getColorModeStyle(
+                      "blackAlpha.200",
+                      "whiteAlpha.200"
+                    )}
+                    _hover={{
+                      bg: getColorModeStyle("blackAlpha.50", "whiteAlpha.50"),
+                    }}
+                    fontSize={12}
+                    onClick={userDetails?.is_pro === false ? onOpen : undefined}
+                  >
+                    <FaCrown
+                      color={
+                        userDetails?.is_pro === true ? "orange" : "#2b6cb0"
+                      }
+                      size={18}
+                    />
+                    {userDetails?.is_pro === true
+                      ? "Pro User"
+                      : "Upgrade to Pro"}
+                  </Button>
+                  <Box
+                    cursor="pointer"
+                    p="8px"
+                    rounded="full"
+                    borderWidth="1px"
+                    borderColor={getColorModeStyle(
+                      "blackAlpha.200",
+                      "whiteAlpha.200"
+                    )}
+                    onClick={toggleColorMode}
+                  >
+                    {getColorModeStyle(<BsMoonFill />, <BsSunFill />)}
+                  </Box>
+                </Flex>
+              </MenuList>
+            </Menu>
+          </Show>
         </Flex>
       </VStack>
       {isOpen && <ProModal isOpen={isOpen} onClose={onClose} />}
