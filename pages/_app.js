@@ -33,7 +33,7 @@ const metadata = {
   name: "ColdReach",
   description:
     "ColdReach is a decentralized platform for user to generate neat DMs for their clients.",
-  url: "https://coldreach.xyz",
+  url: "https://mywebsite.com",
   icons: ["https://avatars.mywebsite.com/"],
 };
 
