@@ -29,13 +29,19 @@ const baseMainnet = {
 };
 
 // 3. Create a metadata object
+// const metadata = {
+//   name: "ColdReach",
+//   description:
+//     "ColdReach is a decentralized platform for user to generate neat DMs for their clients.",
+//   url: "https://mywebsite.com",
+//   icons: ["https://avatars.mywebsite.com/"],
+// };
 const metadata = {
-  name: "ColdReach",
-  description:
-    "ColdReach is a decentralized platform for user to generate neat DMs for their clients.",
-  url: "https://mywebsite.com",
-  icons: ["https://avatars.mywebsite.com/"],
-};
+  name: 'My Website',
+  description: 'My Website description',
+  url: 'https://mywebsite.com', // origin must match your domain & subdomain
+  icons: ['https://avatars.mywebsite.com/']
+}
 
 // 4. Create Ethers config
 const ethersConfig = defaultConfig({
