@@ -320,7 +320,7 @@ function Home() {
             }
             onClick={callGenerateEndpoint}
           >
-            Generate message
+            {!isConnected ? "Connect Wallet" : "Generate Message"}
           </Button>
         </VStack>
       </VStack>

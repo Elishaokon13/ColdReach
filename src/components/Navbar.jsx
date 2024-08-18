@@ -22,10 +22,11 @@ import { FaCrown } from "react-icons/fa6";
 import { truncateText } from "../lib/utils";
 import { BsMoonFill, BsSunFill } from "react-icons/bs";
 import ProModal from "./ProModal";
+import { SlMenu } from "react-icons/sl";
 import { useSelector } from "react-redux";
 
 export default function Navbar() {
-  const user = useSelector ((state) => state.user.user);
+  const user = useSelector((state) => state.user.user);
   const userDetails = user?.user;
 
   // const [isPro, setIsPro] = useState(false);
@@ -36,8 +37,6 @@ export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // console.log(isPro);
-
-  
 
   useEffect(() => {
     let attempts = 0;
@@ -147,9 +146,16 @@ export default function Navbar() {
           <Show below="md">
             <Menu>
               <MenuButton>
-                <SlMenu />
+                <Flex align="center" gap="12px">
+                  <FaCrown
+                    color={userDetails?.is_pro === true ? "orange" : "#2b6cb0"}
+                    size={18}
+                  />
+                  <SlMenu />
+                </Flex>
               </MenuButton>
               <MenuList
+                boxShadow="md"
                 px="12px"
                 align="center"
                 border="none"

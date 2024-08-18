@@ -43,15 +43,15 @@ const ethersConfig = defaultConfig({
   metadata,
 
   /*Optional*/
-  enableEIP6963: true,
-  enableInjected: true,
-  enableCoinbase: true,
   auth: {
     email: true,
     socials: ["google", "x", "github", "discord", "farcaster"],
     showWallets: true,
     walletFeatures: true,
   },
+  enableEIP6963: true,
+  enableInjected: true,
+  enableCoinbase: true,
   rpcUrl: "...",
   defaultChainId: 1,
   coinbasePreference: "smartWalletOnly",
