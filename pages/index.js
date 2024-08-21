@@ -63,7 +63,7 @@ function Home() {
     const submitAddress = async () => {
       try {
         const data = { address };
-        console.log(data);
+        // console.log(data);
         const res = await authenticate(data).unwrap();
         dispatch(setUser(res.data));
       } catch (error) {

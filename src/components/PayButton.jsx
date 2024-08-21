@@ -15,7 +15,7 @@ export const CoinbaseButton = ({ destinationWalletAddress }) => {
   useEffect(() => {
     //initOnRamp parameters
     const options = {
-      appId: "AppIdProvidedByCoinbase",
+      appId: "cc0c37d9-7e39-4901-a062-cc00af1a4525",
       target: "#cbpay-container",
       widgetParameters: {
         destinationWallets: [

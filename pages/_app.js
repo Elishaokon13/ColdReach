@@ -3,10 +3,12 @@ import "./styles.css";
 import theme from "../src/theme/theme";
 // Supports weights 100-900
 import "@fontsource-variable/inter";
+import '@coinbase/onchainkit/styles.css';
 
 import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
 import { Provider } from "react-redux";
 import { store } from "../src/services/store";
+import { OnchainKitProvider } from "@coinbase/onchainkit";
 
 // 1. Get projectId
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
@@ -73,12 +75,16 @@ createWeb3Modal({
 });
 
 function App({ Component, pageProps }) {
-  
   return (
     <ChakraProvider theme={theme} cssVarsRoot="body">
-     <Provider store={store}>
-     <Component {...pageProps} />
-     </Provider>
+      <Provider store={store}>
+        <OnchainKitProvider
+          apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
+          chain={baseMainnet}
+        >
+          <Component {...pageProps} />
+        </OnchainKitProvider>
+      </Provider>
     </ChakraProvider>
   );
 }

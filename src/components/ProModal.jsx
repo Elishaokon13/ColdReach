@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -22,10 +22,28 @@ import { BiCheck } from "react-icons/bi";
 import { BsXLg } from "react-icons/bs";
 import { CoinbaseButton } from "./PayButton";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import { useChargeConnector } from "../hook/chargeConnector";
 
 export default function ProModal({ isOpen, onClose }) {
   const { colorMode } = useColorMode();
-  const { address } = useWeb3ModalAccount();  
+  const { address } = useWeb3ModalAccount();
+
+  const { createCharge, hostedUrl } = useChargeConnector();
+
+  useEffect(() => {
+    const fetchChargeData = async () => {
+      const chargeData = await createCharge();
+     
+    };
+
+    fetchChargeData();
+  }, []);
+
+  const handleClick = () => {
+    if (hostedUrl) {
+      window.location.href = hostedUrl;
+    }
+  };
 
   const getColorModeStyle = (light, dark) =>
     colorMode === "light" ? light : dark;
@@ -113,7 +131,8 @@ export default function ProModal({ isOpen, onClose }) {
                   _hover={{
                     bgGradient: "linear(to-tl, blue.600, blackAlpha.800)",
                   }}
-                  isDisabled
+                  onClick={handleClick}
+                  disabled={!hostedUrl}
                 >
                   Upgrade
                 </Button>
@@ -121,6 +140,7 @@ export default function ProModal({ isOpen, onClose }) {
                   <BsXLg size={20} />
                 </Button>
               </Flex>
+
               {/* <CoinbaseButton destinationWalletAddress={address} /> */}
             </VStack>
           </ModalBody>
