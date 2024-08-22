@@ -21,7 +21,18 @@ const routeSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
+
+    becomePro: builder.mutation({
+      query: ({ body, token }) => ({
+        url: "/auth/become-pro",
+        method: "POST",
+        body,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useAuthenticateMutation, usePromptMutation } = routeSlice;
+export const { useAuthenticateMutation, usePromptMutation, useBecomeProMutation } = routeSlice;
