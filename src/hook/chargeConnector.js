@@ -14,9 +14,9 @@ export function useChargeConnector() {
         currency: "USD", //currency
       },
       pricing_type: "fixed_price",
-      name: "Buidlflex PRO",
-      description: "Small description",
-      redirect_url: "http://localhost:3000/callback?status=success", //optional redirect URL
+      name: "ColdReach PRO",
+      description: "ColdReach is a decentralized platform for user to generate neat DMs for their clients.",
+      redirect_url: "https://coldreach.vercel.app/callback?status=success", //optional redirect URL
       metadata: {
         //optional charge metadata
         id: `${user.user._id}`,
