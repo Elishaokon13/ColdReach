@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useBecomeProMutation } from "../src/services/route";
 import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../src/services/redux";
 
 export default function callback() {
   const [userDetails, setUserDetails] = useState(null);
@@ -15,6 +16,7 @@ export default function callback() {
     }
   }, []);
   const token = `${userDetails?.accessToken}`;
+  const address = `${userDetails?.user?.address}`;
   //   console.log(token);
 
   const router = useRouter();
@@ -29,7 +31,7 @@ export default function callback() {
       if (status) {
         localStorage.setItem("paymentSuccessful", status);
         try {
-          const res = await becomePro({ body: {}, token }).unwrap();
+          const res = await becomePro({ body: { address }, token }).unwrap();
           console.log(res.data);
           dispatch(setUser(res.data));
 
