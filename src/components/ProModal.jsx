@@ -17,6 +17,7 @@ import {
   Flex,
   Divider,
   useColorMode,
+  useToast,
 } from "@chakra-ui/react";
 import { BiCheck } from "react-icons/bi";
 import { BsXLg } from "react-icons/bs";
@@ -33,6 +34,7 @@ export default function ProModal({ isOpen, onClose }) {
   const { address } = useWeb3ModalAccount();
   const [provider, setProvider] = useState(null);
   const { walletProvider } = useWeb3ModalProvider();
+  const toast = useToast();
 
   // const { createCharge, hostedUrl } = useChargeConnector();
 
@@ -52,27 +54,49 @@ export default function ProModal({ isOpen, onClose }) {
   //     setProvider(web3Provider);
   //   }
   // }, []);
-  const sendTransaction = async () => {
-   
+
+  async function onSignMessage() {
     const provider = new BrowserProvider(walletProvider);
-    const signer = provider.getSigner();
-
-    // Define transaction details
+    const signer = await provider.getSigner();
     const tx = {
+      from: address,
       to: "0x32530f32931fEB35Edac8EbB897E81DEa93ce074", // Replace with your dedicated wallet address
-      value: ethers.utils?.parseEther(0.001265), // Amount in ETH (convert from string)
+      value: "2120000000000000", // Amount in ETH (convert from string)
     };
-
+    // const signature = await signer?.signMessage('Hello AppKit Ethers')
+    // console.log(signature)
     try {
       const txResponse = await signer?.sendTransaction(tx);
       console.log("Transaction sent:", txResponse);
       // Wait for transaction confirmation
       const receipt = await txResponse.wait();
       console.log("Transaction confirmed:", receipt);
+      toast({
+        title: "Success",
+        description: (
+          <a
+            href={`https://optimistic.etherscan.io/tx/${receipt.transactionHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View on Optimism Etherscan
+          </a>
+        ),
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (error) {
       console.error("Transaction failed:", error);
+      toast({
+        title: "Error",
+        description: (`${error.message}`),
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
-  };
+  }
 
   const getColorModeStyle = (light, dark) =>
     colorMode === "light" ? light : dark;
@@ -160,7 +184,7 @@ export default function ProModal({ isOpen, onClose }) {
                   _hover={{
                     bgGradient: "linear(to-tl, blue.600, blackAlpha.800)",
                   }}
-                  onClick={() => sendTransaction()}
+                  onClick={() => onSignMessage()}
                   // disabled={!hostedUrl}
                 >
                   Upgrade
