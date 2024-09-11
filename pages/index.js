@@ -32,7 +32,7 @@ import { loadUserFromStorage, setUser } from "../src/services/redux";
 function Home() {
   const user = useSelector((state) => state.user.user);
   const token = user?.accessToken;
-  console.log(token);
+  // console.log(token);
 
   const dispatch = useDispatch();
   useEffect(() => {

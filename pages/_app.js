@@ -30,6 +30,22 @@ const baseMainnet = {
   rpcUrl: "https://mainnet.base.org",
 };
 
+const opMainnet = {
+  chainId: 10, // Chain ID for Optimism
+  name: "Optimism",
+  currency: "ETH",
+  explorerUrl: "https://optimistic.etherscan.io", // Correct block explorer URL for Optimism
+  rpcUrl: "https://mainnet.optimism.io", // Remove extra tab space at the end
+};
+
+const opTestnet = {
+  chainId: 420, // Chain ID for Optimism Goerli Testnet
+  name: "Optimism Goerli",
+  currency: "ETH",
+  explorerUrl: "https://goerli-optimism.etherscan.io", // Block explorer for Optimism Goerli Testnet
+  rpcUrl: "https://goerli.optimism.io", // RPC URL for Optimism Goerli Testnet
+};
+
 // 3. Create a metadata object
 const metadata = {
   name: "ColdReach",
@@ -67,7 +83,7 @@ const ethersConfig = defaultConfig({
 // 5. Create a AppKit instance
 createWeb3Modal({
   ethersConfig,
-  chains: [baseMainnet],
+  chains: [opMainnet],
   projectId,
   enableSwaps: true,
   enableOnramp: true,
@@ -80,7 +96,7 @@ function App({ Component, pageProps }) {
       <Provider store={store}>
         <OnchainKitProvider
           apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
-          chain={baseMainnet}
+          chain={opMainnet}
         >
           <Component {...pageProps} />
         </OnchainKitProvider>

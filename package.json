@@ -19,6 +19,8 @@
     "@emotion/styled": "^11.13.0",
     "@fontsource-variable/inter": "^5.0.20",
     "@reduxjs/toolkit": "^2.2.7",
+    "@walletconnect/client": "^1.8.0",
+    "@walletconnect/web3-provider": "^1.8.0",
     "@web3modal/ethers": "^5.0.11",
     "copy-to-clipboard": "^3.3.3",
     "eslint": "8.27.0",

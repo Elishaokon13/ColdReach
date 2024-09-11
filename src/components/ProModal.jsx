@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -21,27 +21,56 @@ import {
 import { BiCheck } from "react-icons/bi";
 import { BsXLg } from "react-icons/bs";
 import { CoinbaseButton } from "./PayButton";
-import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import {
+  useWeb3ModalAccount,
+  useWeb3ModalProvider,
+} from "@web3modal/ethers/react";
 import { useChargeConnector } from "../hook/chargeConnector";
+import { BrowserProvider, ethers } from "ethers";
 
 export default function ProModal({ isOpen, onClose }) {
   const { colorMode } = useColorMode();
   const { address } = useWeb3ModalAccount();
+  const [provider, setProvider] = useState(null);
+  const { walletProvider } = useWeb3ModalProvider();
 
-  const { createCharge, hostedUrl } = useChargeConnector();
+  // const { createCharge, hostedUrl } = useChargeConnector();
 
-  useEffect(() => {
-    const fetchChargeData = async () => {
-      const chargeData = await createCharge();
-     
+  // useEffect(() => {
+  //   const fetchChargeData = async () => {
+  //     const chargeData = await createCharge();
+
+  //   };
+
+  //   fetchChargeData();
+  // }, []);
+
+  // useEffect(() => {
+  //   if (window.ethereum) {
+  //     // Correctly get Web3Provider from ethers.providers
+  //     const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+  //     setProvider(web3Provider);
+  //   }
+  // }, []);
+  const sendTransaction = async () => {
+   
+    const provider = new BrowserProvider(walletProvider);
+    const signer = provider.getSigner();
+
+    // Define transaction details
+    const tx = {
+      to: "0x32530f32931fEB35Edac8EbB897E81DEa93ce074", // Replace with your dedicated wallet address
+      value: ethers.utils?.parseEther(0.001265), // Amount in ETH (convert from string)
     };
 
-    fetchChargeData();
-  }, []);
-
-  const handleClick = () => {
-    if (hostedUrl) {
-      window.location.href = hostedUrl;
+    try {
+      const txResponse = await signer?.sendTransaction(tx);
+      console.log("Transaction sent:", txResponse);
+      // Wait for transaction confirmation
+      const receipt = await txResponse.wait();
+      console.log("Transaction confirmed:", receipt);
+    } catch (error) {
+      console.error("Transaction failed:", error);
     }
   };
 
@@ -131,8 +160,8 @@ export default function ProModal({ isOpen, onClose }) {
                   _hover={{
                     bgGradient: "linear(to-tl, blue.600, blackAlpha.800)",
                   }}
-                  onClick={handleClick}
-                  disabled={!hostedUrl}
+                  onClick={() => sendTransaction()}
+                  // disabled={!hostedUrl}
                 >
                   Upgrade
                 </Button>
